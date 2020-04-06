@@ -11,4 +11,5 @@ public class Person {
     public void setName(String newName) {name=newName; }
     public String getSurname(){ return surname; }
     public void setSurname(String newSurname) {surname=newSurname; }
+
 }

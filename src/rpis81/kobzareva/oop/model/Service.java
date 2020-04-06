@@ -15,4 +15,5 @@ public class Service {
     public void setName(String newName) {name=newName; }
     public double getCost(){return cost;};
     public void setCost(double newCost) {cost=newCost;}
+
 }

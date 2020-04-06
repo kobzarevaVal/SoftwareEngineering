@@ -161,4 +161,5 @@ public class IndividualsTariff {
             services = updatedRentedServices;
         }
     }
+
 }
