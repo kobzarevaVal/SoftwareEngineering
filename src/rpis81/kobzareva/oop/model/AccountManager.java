@@ -1,9 +1,9 @@
 package rpis81.kobzareva.oop.model;
-
+//todo: комментарии из IndividualsTariff применимы сюда
 public class AccountManager {
     private Account[] accounts;
     private int size;
-    private final static Account DEFAULT_ACCOUNT = new Account();
+  //  private final static Account DEFAULT_ACCOUNT = new Account();
     final static IndividualsTariff DEFAULT_TARIFF = new IndividualsTariff();
     // public AccountManager(){}
 
@@ -31,26 +31,15 @@ public class AccountManager {
         }
         return false;
     }
-
+    // исправлено на arraycopy
     // 2) добавляющий счет в заданное место в массиве
     public boolean add(int index, Account account) {
         doubleUp();
-        Account[] newArray = new Account[accounts.length+1];
         // свиг вправо от места вставки
-        for (int i = 0; i < getAccounts().length; i++)
-        {
-            if (i < index)
-            {
-                newArray[i] = getAccounts()[i];
-            }
-            else if (i > index)
-            {
-                newArray[i + 1] = getAccounts()[i];
-            }
+        if (accounts.length >= index){
+            System.arraycopy(accounts, index, accounts, index + 1, accounts.length - index - 1);
         }
-        newArray[index] = account;
-        accounts = newArray;
-        return false;
+        return add(account);
     }
 
     // 3) возвращающий ссылку на экземпляр класса Account по его номеру в массиве
@@ -60,15 +49,15 @@ public class AccountManager {
 
     // 4) изменяющий ссылку на экземпляр класса Account по его номеру в массиве
     public Account setAccount(int number, Account account){
-        Account pastAccount = new Account();
+        Account lostAccount;
         for (int i = 0; i< accounts.length; i++){
             if (accounts[i].getNumber()==number) {
-                pastAccount = accounts[i];
+                lostAccount = accounts[i];
                 accounts[i] = account;
-                return pastAccount;
+                return lostAccount;
             }
         }
-        return DEFAULT_ACCOUNT;
+        return null;
     }
 
     //5) удаляющий элемент из массива по его номеру
@@ -100,15 +89,16 @@ public class AccountManager {
 
     //7) возвращающий массив счетов
     public Account[] getAccounts(){
-        Account[] newServices = new Account[getCountOfAccount()];
+        Account[] newArray = new Account[getCountOfAccount()];
         int counter = 0;
         for (Account account : accounts){
             if (account!=null) {
-                newServices[counter] = account;
-                counter++;
+                // заменено на arraycopy
+                System.arraycopy(accounts,0,newArray,0,getCountOfAccount());
             }
         }
-        return newServices;
+        accounts = newArray;
+        return accounts;
     }
 
     // 8) возвращающий ссылку на экземпляр класса IndividualsTariff для счета с заданным номером

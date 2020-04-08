@@ -4,9 +4,13 @@ public class IndividualsTariff {
     private Service[] services;
     private int size;
     private final Service DEFAULT_SERVICE = new Service();
+    private final int countOfServices = 8;
+    // сделано
+    //todo: снова магические константы, которые должны выноситься в приватные поля
+
     // по-умолчанию, инициирующий массив из 8 элементов
     public IndividualsTariff(){
-        services = new Service[8];
+        services = new Service[countOfServices];
     }
 
     // принимающий целое число – емкость массива, инициирующий массив указанным числом элементов
@@ -31,25 +35,25 @@ public class IndividualsTariff {
         }
         return false;
     }
+    // сделано
+    //todo: методом копирования массива System.arraycopy пользоваться можно
+
     // 2) добавляет на конкретное место в массиве
     public boolean add(int index, Service service) {
         doubleUp();
-        Service[] newArray = new Service[services.length+1];
         // свиг вправо от места вставки
-        for (int i = 0; i < getServices().length; i++)
-        {
-            if (i < index)
-            {
-                newArray[i] = getServices()[i];
-            }
-            else if (i > index)
-            {
-                newArray[i + 1] = getServices()[i];
-            }
+        if (services.length >= index){
+            System.arraycopy(services, index, services, index + 1, services.length - index - 1);
         }
-        newArray[index] = service;
-        services = newArray;
-        return false;
+        return add(service);
+    }
+
+    private void doubleUp() {
+        if(services[services.length - 1] != null) {
+            Service[] updatedRentedServices = new Service[size * 2];
+            System.arraycopy(services, 0, updatedRentedServices, 0, services.length);
+            services = updatedRentedServices;
+        }
     }
 
     // получить ссылку на экземпляр класса по индексу
@@ -59,25 +63,35 @@ public class IndividualsTariff {
     // получить ссылку на экземпляр класса по имени услуги
     public Service get(String serviceName) {
         for (int i = 0;i<getServices().length;i++){
-            if (getServices()[i].getName().equals(serviceName)) {
+            // сделано
+            //todo: вынести логику сравнения в отдельный приватный метод и вызывать
+            if (isEquals(i,serviceName)) {
                 return getServices()[i];
             }
         }
         return DEFAULT_SERVICE;
     }
 
+    private boolean isEquals(int index, String serviceName){
+        return getServices()[index].getName().equals(serviceName);
+    }
+
     // есть ли услуга с заданным названием
     public boolean hasService(String serviceName) {
         for (int i = 0;i<getServices().length;i++){
-            if (getServices()[i].getName().equals(serviceName)) return true;
+            // сделано
+            //todo: и тут
+            if (isEquals(i,serviceName)) return true;
         }
         return false;
     }
     // изменить ссылку по номеру
     public Service set(int index, Service service) {
-        Service lastService = services[index];
+        // сделано
+        //todo: lost больше подходит, чем last
+        Service lostService = services[index];
         services[index]=service;
-        return lastService;
+        return lostService;
     }
     // удалить по номеру
     public Service remove(int index) {
@@ -113,23 +127,26 @@ public class IndividualsTariff {
     // число услуг
     public int getSize() {
         int countOfServices = 0;
-        for (int i = 0;i<services.length;i++){
-            if (services[i]!=null) countOfServices++;
+        for (Service service: services){
+            if (service != null) countOfServices++;
         }
         return countOfServices;
     }
 
     //10) возвращающий массив услуг -norm
-    public Service[] getServices(){
-        Service[] newServices = new Service[getSize()];
-        int counter = 0;
-        for (Service service : services){
-            if (service!=null) {
-                newServices[counter] = service;
-                counter++;
+    public Service[] getServices() {
+        //todo: почему не обычный for?
+        //потому что нужно просто прбежаться по элементам массива и записать их в другой, но на всякий случай исправлю
+        // исправлено
+        //todo: вместо поэлементного копирования можно использовать System.arraycopy просто на позицию левее
+        Service[] newArray = new Service[getSize()];
+        for (int i = 0; i<services.length;i++) {
+            if (services[i] != null) {
+                System.arraycopy(services,0,newArray,0,getSize());
             }
         }
-        return newServices;
+        services = newArray;
+        return services;
     }
     // сортировка
     public Service[] sortedServicesByCost() {
@@ -148,18 +165,14 @@ public class IndividualsTariff {
     // стоимость тарифа
     public double cost() {
         double  totalCost = 50;
-        for(Service service : getServices()) {
-            totalCost += service.getCost();
+        //todo: почему не обычный for?
+        // потому что тут не нужно менять элементы массива, достаточно просто пробежаться по элементам и сложить стоимость,
+        // плюс не придется в цикле вызывать getServices, но исправлю
+        for(int i = 0;i<getSize();i++) {
+            totalCost += getServices()[i].getCost();
         }
         return totalCost;
     }
-    // удваивание массива
-    private void doubleUp() {
-        if(services[services.length - 1] != null) {
-            Service[] updatedRentedServices = new Service[size * 2];
-            System.arraycopy(services, 0, updatedRentedServices, 0, services.length);
-            services = updatedRentedServices;
-        }
-    }
 
+    //todo: выстраивайте методы в порядке использования!
 }

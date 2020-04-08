@@ -4,8 +4,8 @@ public class Account {
     private IndividualsTariff individualsTariff;
     private Person person;
     private int number;
-
-    public Account(){}
+    // исправлено но теперь setAccount возвращает null вместо DEFAULT_ACCOUNT
+    //todo: такой конструктор не требовался в задании
 
     public Account(Person person, int number) {
         this.person = person;

@@ -5,6 +5,7 @@ public class Test {
     public static void main (String[] args) {
        // System.out.println("Я сделяль!");
         lab1Test();
+
     }
 
     public static void lab1Test(){
@@ -16,6 +17,8 @@ public class Test {
         individualsTariff.add(XLInternet);
         individualsTariff.add(XXLInternet);
         individualsTariff.add(sMSMobile);
+        System.out.println("добавить в конкретное место");
+        System.out.println(individualsTariff.add(3,sMSMobile));
         System.out.println("Получить сервис по индексу");
         System.out.println(individualsTariff.get(1).getName());
         System.out.println("Получить сервис по имени");
@@ -24,8 +27,8 @@ public class Test {
         System.out.println(individualsTariff.hasService("Интернет 75мб/с"));
         //System.out.println("Изменить ссылку по номеру");
         //System.out.println(individualsTariff.set(1,sMSMobile).getName());
-       // System.out.println("Удалить по номеру");
-       // System.out.println(individualsTariff.remove(0).getName());
+        System.out.println("Удалить по номеру");
+        System.out.println(individualsTariff.remove(0).getName());
        // System.out.println("Удалить по имени");
        // System.out.println(individualsTariff.remove("интернет 100 мб\\сек").getName());
         System.out.println("число услуг");
