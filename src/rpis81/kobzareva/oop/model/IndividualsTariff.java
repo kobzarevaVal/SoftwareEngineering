@@ -1,41 +1,45 @@
 package rpis81.kobzareva.oop.model;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class IndividualsTariff {
-    private Service[] services;
+    public final static int DEFAULT_SIZE = 8;
     private int size;
+    private Service[] services;
     private final Service DEFAULT_SERVICE = new Service();
-    private final int countOfServices = 8;
-    // сделано
-    //todo: снова магические константы, которые должны выноситься в приватные поля
 
     // по-умолчанию, инициирующий массив из 8 элементов
-    public IndividualsTariff(){
-        services = new Service[countOfServices];
+    public IndividualsTariff() {
+        // исправлено
+        //todo: снова магические константы, которые должны выноситься в приватные поля
+        services = new Service[DEFAULT_SIZE];
     }
 
     // принимающий целое число – емкость массива, инициирующий массив указанным числом элементов
-    public IndividualsTariff(int index){
+    public IndividualsTariff(int index) {
         services = new Service[index];
     }
 
     // принимающий массив услуг. В этом конструкторе происходит копирование элементов в
     //новый массив, и ссылка на него записывается в атрибут.
-    public IndividualsTariff(Service[] services){
+    public IndividualsTariff(Service[] services) {
         this.services = services;
     }
 
     // 1) добавляющий услугу в первое свободное место в массиве - норм
     public boolean add(Service service){
-        for (int i=0;i<services.length;i++){
+        doubleUp();
+        for (int i = 0; i<services.length;i++){
             if (services[i]==null) {
-                services[i]=service;
-                size= getSize();
+                services[i] = service;
+                size++;
                 return true;
             }
         }
         return false;
     }
-    // сделано
+    // исправлено
     //todo: методом копирования массива System.arraycopy пользоваться можно
 
     // 2) добавляет на конкретное место в массиве
@@ -49,7 +53,7 @@ public class IndividualsTariff {
     }
 
     private void doubleUp() {
-        if(services[services.length - 1] != null) {
+        if (services[services.length - 1] != null) {
             Service[] updatedRentedServices = new Service[size * 2];
             System.arraycopy(services, 0, updatedRentedServices, 0, services.length);
             services = updatedRentedServices;
@@ -60,10 +64,11 @@ public class IndividualsTariff {
     public Service get(int index) {
         return services[index];
     }
+
     // получить ссылку на экземпляр класса по имени услуги
     public Service get(String serviceName) {
-        for (int i = 0;i<getServices().length;i++){
-            // сделано
+        for (int i = 0; i < getServices().length; i++) {
+            // исправлено
             //todo: вынести логику сравнения в отдельный приватный метод и вызывать
             if (isEquals(i,serviceName)) {
                 return getServices()[i];
@@ -71,44 +76,35 @@ public class IndividualsTariff {
         }
         return DEFAULT_SERVICE;
     }
-
     private boolean isEquals(int index, String serviceName){
         return getServices()[index].getName().equals(serviceName);
     }
 
     // есть ли услуга с заданным названием
     public boolean hasService(String serviceName) {
-        for (int i = 0;i<getServices().length;i++){
-            // сделано
+        for (int i = 0; i < getServices().length; i++) {
+            // исправлено
             //todo: и тут
             if (isEquals(i,serviceName)) return true;
         }
         return false;
     }
+
     // изменить ссылку по номеру
     public Service set(int index, Service service) {
-        // сделано
+        Service lastService = services[index];
+        services[index] = service;
+        // исправлено
         //todo: lost больше подходит, чем last
-        Service lostService = services[index];
-        services[index]=service;
-        return lostService;
+        return lastService;
     }
+
     // удалить по номеру
     public Service remove(int index) {
         Service deletedService = services[index];
-        Service[] newArray = new Service[getServices().length - 1];
-        for (int i = 0; i < getServices().length; i++)
-        {
-            if (i < index)
-            {
-                newArray[i] = getServices()[i];
-            }
-            else if (i > index)
-            {
-                newArray[i - 1] = getServices()[i];
-            }
-        }
-        services = newArray;
+        services[index] = null;
+        size--;
+        services = getServices();
         return deletedService;
     }
     // удалить по инмени
@@ -116,38 +112,44 @@ public class IndividualsTariff {
         int index = getIndex(serviceName);
         return remove(index);
     }
-    private int getIndex(String name){
-        int index=0;
-        for(int i = 0; i < getServices().length; i++)
-        {
+
+    private int getIndex(String name) {
+        int index = 0;
+        for (int i = 0; i < getServices().length; i++) {
             if (getServices()[i].getName().equals(name)) index = i;
         }
         return index;
     }
+
     // число услуг
     public int getSize() {
-        int countOfServices = 0;
-        for (Service service: services){
-            if (service != null) countOfServices++;
-        }
-        return countOfServices;
+        return size;
     }
 
     //10) возвращающий массив услуг -norm
-    public Service[] getServices() {
-        //todo: почему не обычный for?
-        //потому что нужно просто прбежаться по элементам массива и записать их в другой, но на всякий случай исправлю
-        // исправлено
-        //todo: вместо поэлементного копирования можно использовать System.arraycopy просто на позицию левее
-        Service[] newArray = new Service[getSize()];
-        for (int i = 0; i<services.length;i++) {
-            if (services[i] != null) {
-                System.arraycopy(services,0,newArray,0,getSize());
-            }
-        }
-        services = newArray;
+    /*Я знаю, что так нельзя скорее всего, но я не знаю как при помощи arraycopy скопирвать массив не на интервале
+    (то есть отсюда до сюда) а с условием (то есть скопруй все кроме null) без перебора по элементам. Я пробовала использовать
+     arraycopy со сдвигом налево но выпадал NullPointerException если подряд шло два или более null. Так что я нашла
+    вот такой способ. На всякий случай оставляю ниже старый метод с поэлементным копированием. Пожалуйста, не заставляйте
+    меня тратить еще несколько дней на реализацию через arraycopy, я сдаюсь. Оно работает, я не лезу*/
+    public  Service[] getServices(){
+        services = Arrays.stream(services).filter(Objects::nonNull).toArray(Service[]::new);
         return services;
     }
+
+    public  Service[] GetServices(){
+        Service[] newServices = new Service[getSize()];
+        int counter = 0;
+        for (int i=0;services.length>i;i++){
+            if (services[i]!=null) {
+                newServices[counter] = services[i];
+                counter++;
+            }
+        }
+        services=newServices;
+        return services;
+    }
+
     // сортировка
     public Service[] sortedServicesByCost() {
         Service[] sortingServices = getServices();
@@ -162,17 +164,18 @@ public class IndividualsTariff {
         }
         return (sortingServices);
     }
+
     // стоимость тарифа
     public double cost() {
-        double  totalCost = 50;
+        double totalCost = 50;
+        // исправлено
         //todo: почему не обычный for?
-        // потому что тут не нужно менять элементы массива, достаточно просто пробежаться по элементам и сложить стоимость,
-        // плюс не придется в цикле вызывать getServices, но исправлю
-        for(int i = 0;i<getSize();i++) {
+        for (int i=0;i<size;i++) {
             totalCost += getServices()[i].getCost();
         }
         return totalCost;
     }
 
+    // удваивание массива перенесено к месту вызова
     //todo: выстраивайте методы в порядке использования!
 }

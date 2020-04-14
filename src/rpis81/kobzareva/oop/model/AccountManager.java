@@ -1,38 +1,40 @@
 package rpis81.kobzareva.oop.model;
+
+import java.util.Arrays;
+import java.util.Objects;
+
 //todo: комментарии из IndividualsTariff применимы сюда
 public class AccountManager {
     private Account[] accounts;
     private int size;
-  //  private final static Account DEFAULT_ACCOUNT = new Account();
+    // private final static Account DEFAULT_ACCOUNT = new Account();
     final static IndividualsTariff DEFAULT_TARIFF = new IndividualsTariff();
-    // public AccountManager(){}
 
     // принимающий массив счетов. В этом конструкторе происходит копирование элементов в
     //новый массив, и ссылка на него записывается в атрибут.
-    public AccountManager(Account[] accountArray){
+    public AccountManager(Account[] accountArray) {
         this.accounts = accountArray;
-        this.size = accountArray.length;
+        //  this.size = accountArray.length;
     }
 
     // принимающий один параметр – число счетов, инициализирующий массив соответствующим числом элементов
-    public AccountManager(int size){
-        this.accounts =new Account[size];
-        this.size=size;
+    public AccountManager(int size) {
+        this.accounts = new Account[size];
+        this.size = size;
     }
 
-    // 1) добавляющий счет в первое свободное место в массиве
     public boolean add(Account account){
-        for (int i = 0; i< accounts.length; i++){
+        doubleUp();
+        for (int i = 0; i<accounts.length;i++){
             if (accounts[i]==null) {
-                accounts[i]=account;
+                accounts[i] = account;
                 size++;
                 return true;
             }
         }
         return false;
     }
-    // исправлено на arraycopy
-    // 2) добавляющий счет в заданное место в массиве
+    // 2) добавляет на конкретное место в массиве
     public boolean add(int index, Account account) {
         doubleUp();
         // свиг вправо от места вставки
@@ -41,17 +43,24 @@ public class AccountManager {
         }
         return add(account);
     }
+    private void doubleUp() {
+        if (accounts[accounts.length - 1] != null) {
+            Account[] updatedRentedAccounts = new Account[size * 2];
+            System.arraycopy(accounts, 0, updatedRentedAccounts, 0, accounts.length);
+            accounts = updatedRentedAccounts;
+        }
+    }
 
     // 3) возвращающий ссылку на экземпляр класса Account по его номеру в массиве
-    public Account getAccount(int index){
+    public Account getAccount(int index) {
         return accounts[index];
     }
 
     // 4) изменяющий ссылку на экземпляр класса Account по его номеру в массиве
-    public Account setAccount(int number, Account account){
+    public Account setAccount(int number, Account account) {
         Account lostAccount;
-        for (int i = 0; i< accounts.length; i++){
-            if (accounts[i].getNumber()==number) {
+        for (int i = 0; i < accounts.length; i++) {
+            if (accounts[i].getNumber() == number) {
                 lostAccount = accounts[i];
                 accounts[i] = account;
                 return lostAccount;
@@ -60,69 +69,44 @@ public class AccountManager {
         return null;
     }
 
-    //5) удаляющий элемент из массива по его номеру
+    // удалить по номеру
     public Account remove(int index) {
-        Account deletedAccount = accounts[index];
-        Account[] newArray = new Account[getAccounts().length - 1];
-        for (int i = 0; i < getAccounts().length; i++)
-        {
-            if (i < index)
-            {
-                newArray[i] = getAccounts()[i];
-            }
-            else if (i > index)
-            {
-                newArray[i - 1] = getAccounts()[i];
-            }
-        }
-        accounts = newArray;
-        return deletedAccount;
+        Account lostAccount = accounts[index];
+        accounts[index] = null;
+        size--;
+        accounts = getAccounts();
+        return lostAccount;
     }
+
     //6) возвращающий число счетов
-    public int getCountOfAccount(){
-        int countOfAccount = 0;
-        for (int i = 0; i< accounts.length; i++){
-            if (accounts[i]!=null) countOfAccount++;
-        }
-        return countOfAccount;
+    public int getCountOfAccount() {
+        return getAccounts().length;
     }
 
     //7) возвращающий массив счетов
-    public Account[] getAccounts(){
-        Account[] newArray = new Account[getCountOfAccount()];
-        int counter = 0;
-        for (Account account : accounts){
-            if (account!=null) {
-                // заменено на arraycopy
-                System.arraycopy(accounts,0,newArray,0,getCountOfAccount());
-            }
-        }
-        accounts = newArray;
+    public  Account[] getAccounts(){
+        accounts = Arrays.stream(accounts).filter(Objects::nonNull).toArray(Account[]::new);
         return accounts;
     }
 
     // 8) возвращающий ссылку на экземпляр класса IndividualsTariff для счета с заданным номером
-    public IndividualsTariff getTariff(long accountNumber){
-        for (Account account: getAccounts()){
-            if (account.getNumber()==accountNumber) return account.getIndividualsTariff();
+    public IndividualsTariff getTariff(long accountNumber) {
+        for(int i=0;i<size;i++){
+            if (isEquals(i,accountNumber)) return getAccounts()[i].getIndividualsTariff();
         }
+
         return DEFAULT_TARIFF;
+    }
+    private boolean isEquals(int index, long accountNumber){
+        return getAccounts()[index].getNumber()==accountNumber;
     }
 
     // 9) изменяющий ссылку на экземпляр класса IndividualsTariff для счета с заданным номером
-    public  IndividualsTariff setTariff(int accountNumber,IndividualsTariff tariff){
+    public IndividualsTariff setTariff(int accountNumber, IndividualsTariff tariff) {
         IndividualsTariff individualsTariff = getTariff(accountNumber);
-        for (int i = 0; i< getAccounts().length; i++){
-            if (getAccounts()[i].getNumber()==accountNumber) accounts[i].setIndividualsTariff(tariff);
+        for (int i = 0; i < getAccounts().length; i++) {
+            if (isEquals(i,accountNumber)) accounts[i].setIndividualsTariff(tariff);
         }
         return individualsTariff;
-    }
-
-    private void doubleUp() {
-        if (accounts[accounts.length - 1] != null) {
-            Account[] updatedRentedAccounts = new Account[size * 2];
-            System.arraycopy(accounts, 0, updatedRentedAccounts, 0, accounts.length);
-            accounts = updatedRentedAccounts;
-        }
     }
 }

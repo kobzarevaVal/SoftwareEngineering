@@ -4,7 +4,7 @@ public class Account {
     private IndividualsTariff individualsTariff;
     private Person person;
     private int number;
-    // исправлено но теперь setAccount возвращает null вместо DEFAULT_ACCOUNT
+    // исправлено
     //todo: такой конструктор не требовался в задании
 
     public Account(Person person, int number) {
