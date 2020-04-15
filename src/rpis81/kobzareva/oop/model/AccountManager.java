@@ -1,5 +1,4 @@
 package rpis81.kobzareva.oop.model;
-
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -84,6 +83,7 @@ public class AccountManager {
     }
 
     //7) возвращающий массив счетов
+    // см. комментарий из IndividualsTariff
     public  Account[] getAccounts(){
         accounts = Arrays.stream(accounts).filter(Objects::nonNull).toArray(Account[]::new);
         return accounts;

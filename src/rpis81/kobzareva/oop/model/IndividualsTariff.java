@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class IndividualsTariff {
-    public final static int DEFAULT_SIZE = 8;
+    private final static int DEFAULT_SIZE = 8;
     private int size;
     private Service[] services;
     private final Service DEFAULT_SERVICE = new Service();
