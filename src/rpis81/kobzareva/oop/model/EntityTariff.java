@@ -4,7 +4,6 @@ public class EntityTariff implements Tariff {
     private Node head;
     private Node tail;
     private int size;
-    transient Node last;
     public EntityTariff(){
         tail = new Node(null,head,null);
         head = new Node(null,null,tail);
