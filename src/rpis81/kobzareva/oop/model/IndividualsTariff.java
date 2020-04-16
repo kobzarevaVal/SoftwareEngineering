@@ -3,7 +3,7 @@ package rpis81.kobzareva.oop.model;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class IndividualsTariff {
+public class IndividualsTariff implements Tariff {
     private final static int DEFAULT_SIZE = 8;
     private int size;
     private Service[] services;
@@ -132,21 +132,29 @@ public class IndividualsTariff {
      arraycopy со сдвигом налево но выпадал NullPointerException если подряд шло два или более null. Так что я нашла
     вот такой способ. На всякий случай оставляю ниже старый метод с поэлементным копированием. Пожалуйста, не заставляйте
     меня тратить еще несколько дней на реализацию через arraycopy, я сдаюсь. Оно работает, я не лезу*/
-    public  Service[] getServices(){
-        services = Arrays.stream(services).filter(Objects::nonNull).toArray(Service[]::new);
-        return services;
-    }
 
+    // это плохой нерабочий метод, я просто оставлю это здесь
     public  Service[] GetServices(){
-        Service[] newServices = new Service[getSize()];
-        int counter = 0;
-        for (int i=0;services.length>i;i++){
-            if (services[i]!=null) {
-                newServices[counter] = services[i];
-                counter++;
+        Service[] result = new Service[getSize()];
+        for (int i=0;i<services.length;i++){
+            if(services[i]==null) {
+                System.arraycopy(services, i+ 1, result, 0, services.length - i - 1);
             }
         }
-        services=newServices;
+        return result;
+    }
+
+    // это хороший рабочий метод, он используется везде
+    public  Service[] getServices(){
+        Service[] result = new Service[getSize()];
+        int index =0;
+        for (int i=0;services.length>i;i++){
+            if (services[i]!=null) {
+                result[index] = services[i];
+                index++;
+            }
+        }
+        services = result;
         return services;
     }
 

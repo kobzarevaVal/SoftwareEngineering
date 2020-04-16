@@ -79,20 +79,32 @@ public class AccountManager {
 
     //6) возвращающий число счетов
     public int getCountOfAccount() {
-        return getAccounts().length;
+        int size = 0;
+        for (int i=0;i<accounts.length;i++){
+            if (accounts[i]!=null) size++;
+        }
+        return size;
     }
 
     //7) возвращающий массив счетов
     // см. комментарий из IndividualsTariff
     public  Account[] getAccounts(){
-        accounts = Arrays.stream(accounts).filter(Objects::nonNull).toArray(Account[]::new);
+        Account[] result = new Account[getCountOfAccount()];
+        int index =0;
+        for (int i=0;accounts.length>i;i++){
+            if (accounts[i]!=null) {
+                result[index] = accounts[i];
+                index++;
+            }
+        }
+        accounts = result;
         return accounts;
     }
 
     // 8) возвращающий ссылку на экземпляр класса IndividualsTariff для счета с заданным номером
-    public IndividualsTariff getTariff(long accountNumber) {
+    public Tariff getTariff(long accountNumber) {
         for(int i=0;i<size;i++){
-            if (isEquals(i,accountNumber)) return getAccounts()[i].getIndividualsTariff();
+            if (isEquals(i,accountNumber)) return getAccounts()[i].getTariff();
         }
 
         return DEFAULT_TARIFF;
@@ -102,10 +114,10 @@ public class AccountManager {
     }
 
     // 9) изменяющий ссылку на экземпляр класса IndividualsTariff для счета с заданным номером
-    public IndividualsTariff setTariff(int accountNumber, IndividualsTariff tariff) {
-        IndividualsTariff individualsTariff = getTariff(accountNumber);
+    public Tariff setTariff(int accountNumber, Tariff tariff) {
+        Tariff individualsTariff = getTariff(accountNumber);
         for (int i = 0; i < getAccounts().length; i++) {
-            if (isEquals(i,accountNumber)) accounts[i].setIndividualsTariff(tariff);
+            if (isEquals(i,accountNumber)) accounts[i].setTariff(tariff);
         }
         return individualsTariff;
     }
