@@ -143,7 +143,6 @@ public class IndividualsTariff implements Tariff {
         }
         return result;
     }
-
     // это хороший рабочий метод, он используется везде
     public  Service[] getServices(){
         Service[] result = new Service[getSize()];
@@ -182,6 +181,30 @@ public class IndividualsTariff implements Tariff {
             totalCost += getServices()[i].getCost();
         }
         return totalCost;
+    }
+
+    @Override
+    public Service[] getServices(ServiceTypes type) {
+        Service[] newServiceArray = new Service[getCountOfServices(type)];
+        Service[] services = getServices();
+        int counter = 0;
+        for (int i=0;i<getServices().length;i++){
+            if (services[i].getType().equals(type)) {
+                newServiceArray[counter] = services[i];
+                counter++;
+            }
+        }
+        return (newServiceArray);
+    }
+
+    private int getCountOfServices(ServiceTypes type){
+        int result = 0;
+        for (int i=0;i<getServices().length;i++){
+            if (services[i].getType().equals(type)) {
+                result++;
+            }
+        }
+        return result;
     }
 
     // удваивание массива перенесено к месту вызова

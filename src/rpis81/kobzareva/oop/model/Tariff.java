@@ -13,4 +13,5 @@ public interface Tariff {
     Service[] sortedServicesByCost();
     double cost();
     int getSize();
+    Service[] getServices(ServiceTypes type);
 }

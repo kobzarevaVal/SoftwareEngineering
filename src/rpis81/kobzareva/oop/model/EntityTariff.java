@@ -5,15 +5,13 @@ public class EntityTariff implements Tariff {
     private Node tail;
     private int size;
     public EntityTariff(){
-        tail = new Node(null,head,null);
-        head = new Node(null,null,tail);
+        this.tail = new Node(null,head,null);
+        this.head = new Node(null,null,tail);
         this.size = 0;
     }
-
+// исправлено, один конструктор вызван внутри другого
     public EntityTariff(Service[] services){
-        tail = new Node(null,head,null);
-        head = new Node(null,null,tail);
-        size = 0;
+        this();
         for (int i = 0; i < services.length; i++) {
             add(services[i]);
             size++;
@@ -125,7 +123,34 @@ public class EntityTariff implements Tariff {
         return cost;
     }
 
-    // приватные методы
+    @Override
+    public Service[] getServices(ServiceTypes type) {
+        Service[] newServiceArray = new Service[getCountOfTypeServices(type)];
+        Service[] services = getServices();
+        int counter = 0;
+        for (int i=0;i<getServices().length;i++){
+            if (services[i].getType().equals(type)) {
+                newServiceArray[counter] = services[i];
+                counter++;
+            }
+        }
+        return (newServiceArray);
+    }
+
+    private int getCountOfTypeServices(ServiceTypes type){
+        Service[] services = getServices();
+        int result = 0;
+        for (int i=0;i<getServices().length;i++){
+            if (services[i].getType().equals(type)) {
+                result++;
+            }
+        }
+        return result;
+    }
+    // приватные методы все вроде, остальные нужно было самостоятельно реализовать, а приватные в них используются. Да и публичные методы
+    // тут только те что из интерфейса
+
+    // добавляющий узел в конец списка
     private boolean addNode(Service service){
         Node prev = tail;
         prev.setValue(service);
@@ -134,6 +159,7 @@ public class EntityTariff implements Tariff {
         size++;
         return true;
     }
+    // добавляющий узел в заданную позицию в списке
     private boolean addNode (int index, Service service){
         Node node = getNode(index), previousNode = node.getPrevious();
         Node insertedNode = new Node(null);
@@ -153,6 +179,7 @@ public class EntityTariff implements Tariff {
         getNode(index).setValue(service);
         return true;
     }
+    // возвращающий ссылку на узел по его номеру в списке
     private Node getNode(int index){
         Node target = head.getNext();
         for(int i = 0;i<index;i++){
@@ -160,7 +187,7 @@ public class EntityTariff implements Tariff {
         }
         return target;
     }
-
+    // удаляющий узел по его номеру в списке
     private Node removeNode (int index){
         Node node = getNode(index), nextNode = node.getNext(), previousNode = node.getPrevious();
         previousNode.setNext(nextNode);
@@ -168,7 +195,7 @@ public class EntityTariff implements Tariff {
         size--;
         return node;
     }
-
+    // изменяющий узел с заданным номером
     private Node setNode (int index, Service service){
         Node node = getNode(index);
         Node replacedService = node;

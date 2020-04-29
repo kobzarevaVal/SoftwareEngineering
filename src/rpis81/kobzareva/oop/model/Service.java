@@ -1,36 +1,21 @@
 package rpis81.kobzareva.oop.model;
 
-public class Service {
-    private double cost;
-    private String name;
-    private final static String DEFAULT_NAME = "интернет 100 мб\\сек";
-    private final static double DEFAULT_COST = 300;
-    // исправлено
-    //todo: у нас существуют магические константы
-    public Service() {
-        this.name = DEFAULT_NAME;
-        this.cost = DEFAULT_COST;
+public final class Service {
+    final private double cost;
+    final private String name;
+    final private ServiceTypes type;
+    public Service(){
+        this.name = "интернет 100 мб\\сек";
+        this.cost = 300;
+        this.type = ServiceTypes.INTERNET;
     }
-
-    public Service(String name, double cost) {
+    public Service(String name, double cost, ServiceTypes type){
         this.cost = cost;
         this.name = name;
+        this.type = type;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String newName) {
-        name = newName;
-    }
-
-    public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double newCost) {
-        cost = newCost;
-    }
+    public String getName(){ return name; }
+    public double getCost(){return cost;};
+    public ServiceTypes getType(){ return type; }
 
 }

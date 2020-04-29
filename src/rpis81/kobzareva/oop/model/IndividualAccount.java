@@ -1,29 +1,19 @@
 package rpis81.kobzareva.oop.model;
 
-public class IndividualAccount implements Account{
-    private Tariff tariff;
+public class IndividualAccount extends AbstractAccount{
     private Person person;
-    private long number;
-    // исправлено
-    //todo: такой конструктор не требовался в задании
 
     public IndividualAccount(Person person, long number) {
+        super(number,new IndividualsTariff());
         this.person = person;
-        this.number = number;
+        Tariff tariff = new IndividualsTariff();
+        tariff.add(new Service());
+        setTariff(tariff);
     }
 
     public IndividualAccount(Tariff tariff, Person person, long number) {
-        this.tariff = tariff;
+        super(number, tariff);
         this.person = person;
-        this.number = number;
-    }
-
-    public Tariff getTariff() {
-        return tariff;
-    }
-
-    public void setTariff(Tariff tariff) {
-        this.tariff = tariff;
     }
 
     public Person getPerson() {
@@ -32,13 +22,5 @@ public class IndividualAccount implements Account{
 
     public void setPerson(Person person) {
         this.person = person;
-    }
-
-    public long getNumber() {
-        return number;
-    }
-
-    public void setNumber(long number) {
-        this.number = number;
     }
 }
