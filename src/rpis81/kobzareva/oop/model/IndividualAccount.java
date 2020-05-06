@@ -41,6 +41,7 @@ public class IndividualAccount extends AbstractAccount{
     @Override
     public int hashCode(){
         return 97* super.hashCode()*Objects.hashCode(getPerson());
+
     }
 
     @Override

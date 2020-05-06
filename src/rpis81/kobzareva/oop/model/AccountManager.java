@@ -182,6 +182,7 @@ public class AccountManager {
             return !currentAccount.equals(account);
         }
         return false;
+
     }
 
     public int getIndex(Account account){

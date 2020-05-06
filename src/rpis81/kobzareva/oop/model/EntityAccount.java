@@ -56,6 +56,6 @@ public class EntityAccount extends AbstractAccount {
             return false;
         }
         EntityAccount other = (EntityAccount) obj;
-        return entityName == other.entityName /*&& Objects.deepEquals(toArray(), other.toArray())*/;
+        return entityName == other.entityName;
     }
 }

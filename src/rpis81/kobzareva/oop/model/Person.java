@@ -22,7 +22,6 @@ public class Person {
     @Override
     public int hashCode(){
         return name.hashCode()*surname.hashCode();
-        //return Objects.hash(name,surname);
     }
 
     @Override

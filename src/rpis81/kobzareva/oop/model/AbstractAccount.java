@@ -38,7 +38,6 @@ public abstract class AbstractAccount implements Account{
     @Override
     public int hashCode(){
         return Long.hashCode(number)*Integer.hashCode(getTariff().getSize());
-        //return Objects.hash(number,getTariff().getSize());
     }
 
     @Override

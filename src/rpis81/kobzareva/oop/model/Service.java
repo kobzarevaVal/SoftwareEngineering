@@ -33,7 +33,6 @@ public final class Service implements Cloneable {
     @Override
     public int hashCode(){
         return name.hashCode()*type.hashCode()*Double.hashCode(cost);
-      //  return Objects.hash(name,type,Double.hashCode(cost));
     }
 
     @Override

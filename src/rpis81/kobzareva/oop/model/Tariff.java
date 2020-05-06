@@ -21,5 +21,4 @@ public interface Tariff {
     boolean removeService(Service service);
     int firstIndexOf(Service service);
     int lastIndexOf(Service service);
-
 }

@@ -210,6 +210,7 @@ public class IndividualsTariff implements Tariff,Cloneable {
         StringBuilder builder = new StringBuilder("Services:\n");
         for(Service service:getServices()){
             builder.append(service.toString());
+
         }
         return builder.toString();
 

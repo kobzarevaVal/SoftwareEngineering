@@ -44,6 +44,7 @@ public class EntityTariff implements Tariff, Cloneable {
     }
     private boolean isNameEquals(int index, String serviceName){
         return getNode(index).getValue().getName().equals(serviceName) && getNode(index).getValue().getName() != null;
+
     }
     @Override
     public boolean hasService(String serviceName) {
