@@ -1,6 +1,6 @@
 package rpis81.kobzareva.oop.model;
 
-public class EntityTariff implements Tariff {
+public class EntityTariff implements Tariff, Cloneable {
     private Node head;
     private Node tail;
     private int size;
@@ -147,6 +147,36 @@ public class EntityTariff implements Tariff {
         }
         return result;
     }
+
+    public boolean removeService(Service service){
+        Service deletedService = remove(service.getName());
+        remove(service.getName());
+        for (Service currentAccount: getServices()){
+            return !currentAccount.equals(deletedService);
+        }
+        return false;
+    }
+
+    public int firstIndexOf(Service service){
+        int index=0;
+        for(int i = 0; i < getServices().length; i++)
+        {
+            if (getServices()[i].equals(service)) {
+                return i;
+            }
+        }
+        return index;
+    }
+
+    public int lastIndexOf(Service service){
+        int index=0;
+        for(int i = getServices().length-1; i >=0 ; i--)
+        {
+            if (getServices()[i].equals(service)) return i;
+        }
+        return index;
+    }
+
     // приватные методы все вроде, остальные нужно было самостоятельно реализовать, а приватные в них используются. Да и публичные методы
     // тут только те что из интерфейса
 
@@ -201,5 +231,41 @@ public class EntityTariff implements Tariff {
         Node replacedService = node;
         node.setValue(service);
         return replacedService;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder builder = new StringBuilder("Services:\n");
+        for(Service service:getServices()){
+            builder.append(service.toString());
+        }
+        return builder.toString();
+
+    }
+
+    @Override
+    public int hashCode(){
+        int result=71;
+        for(Service service:getServices()){
+            result*=service.hashCode();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) {
+            return true;
+        }
+        if(!(obj instanceof EntityTariff)) {
+            return false;
+        }
+        EntityTariff other = (EntityTariff) obj;
+        return size==other.size;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

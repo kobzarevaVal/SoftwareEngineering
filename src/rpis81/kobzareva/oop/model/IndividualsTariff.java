@@ -1,9 +1,9 @@
 package rpis81.kobzareva.oop.model;
-
+import java.lang.Cloneable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class IndividualsTariff implements Tariff {
+public class IndividualsTariff implements Tariff,Cloneable {
     private final static int DEFAULT_SIZE = 8;
     private int size;
     private Service[] services;
@@ -109,17 +109,15 @@ public class IndividualsTariff implements Tariff {
     }
     // удалить по инмени
     public Service remove(String serviceName) {
-        int index = getIndex(serviceName);
+        Service tmp = new Service();
+        for (Service service:getServices()){
+            if (service.getName().equals(serviceName)) tmp = service;
+        }
+        int index = firstIndexOf(tmp);
         return remove(index);
     }
 
-    private int getIndex(String name) {
-        int index = 0;
-        for (int i = 0; i < getServices().length; i++) {
-            if (getServices()[i].getName().equals(name)) index = i;
-        }
-        return index;
-    }
+
 
     // число услуг
     public int getSize() {
@@ -207,6 +205,66 @@ public class IndividualsTariff implements Tariff {
         return result;
     }
 
-    // удваивание массива перенесено к месту вызова
-    //todo: выстраивайте методы в порядке использования!
+    @Override
+    public String toString(){
+        StringBuilder builder = new StringBuilder("Services:\n");
+        for(Service service:getServices()){
+            builder.append(service.toString());
+        }
+        return builder.toString();
+
+    }
+
+    public boolean removeService(Service service) {
+        Service deletedService = remove(firstIndexOf(service));
+        for (Service currentAccount: getServices()){
+            return !currentAccount.equals(deletedService);
+        }
+        return false;
+    }
+
+    public int firstIndexOf(Service service){
+        int index=0;
+        for(int i = 0; i < getServices().length; i++)
+        {
+            if (getServices()[i].equals(service)) return i;
+        }
+        return index;
+    }
+
+    public int lastIndexOf(Service service){
+        int index=0;
+        for(int i = getServices().length-1; i >=0 ; i--)
+        {
+            if (getServices()[i].equals(service)) return i;
+        }
+        return index;
+    }
+
+    @Override
+    public int hashCode(){
+        int result=31;
+        for(Service service:getServices()){
+            result*=service.hashCode();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) {
+            return true;
+        }
+        if(!(obj instanceof IndividualsTariff)) {
+            return false;
+        }
+        IndividualsTariff other = (IndividualsTariff) obj;
+        return size == other.size;
+
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

@@ -165,4 +165,31 @@ public class AccountManager {
         System.arraycopy(getAccountsArray, 0, shortArray, 0, index);
         return shortArray;
     }
+
+    @Override
+    public String toString(){
+        StringBuilder builder = new StringBuilder("accounts:\n");
+        for(Account account: getAccounts()){
+            builder.append(account.toString());
+        }
+        return builder.toString();
+    }
+
+    public boolean removeAccount(Account account){
+        accounts[getIndex(account)] = null;
+        accounts = getAccounts();
+        for (Account currentAccount: getAccounts()){
+            return !currentAccount.equals(account);
+        }
+        return false;
+    }
+
+    public int getIndex(Account account){
+        int index=0;
+        for(int i = 0; i < getAccounts().length; i++)
+        {
+            if (getAccounts()[i].equals(account)) return i;
+        }
+        return index;
+    }
 }

@@ -29,4 +29,33 @@ public class EntityAccount extends AbstractAccount {
     public void setEntityName(String entityName){
         this.entityName = entityName;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("Entity account: "+"\n");
+        builder.append("Entity "+entityName);
+        return String.format(super.toString(),builder);
+    }
+
+    @Override
+    public int hashCode() {
+        return 53 * super.hashCode();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
+        }
+        if(!(obj instanceof EntityAccount)) {
+            return false;
+        }
+        EntityAccount other = (EntityAccount) obj;
+        return entityName == other.entityName /*&& Objects.deepEquals(toArray(), other.toArray())*/;
+    }
 }

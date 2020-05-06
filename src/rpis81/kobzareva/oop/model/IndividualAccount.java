@@ -1,5 +1,7 @@
 package rpis81.kobzareva.oop.model;
 
+import java.util.Objects;
+
 public class IndividualAccount extends AbstractAccount{
     private Person person;
 
@@ -22,5 +24,28 @@ public class IndividualAccount extends AbstractAccount{
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder builder = new StringBuilder("Individual account:\n");
+        builder.append("holder: "+ getPerson().getName()+"\n");
+        builder.append("number: "+super.getNumber()+"\n");
+        builder.append("services\n");
+        for(Service service: getTariff().getServices()){
+            builder.append(service.toString());
+        }
+        return builder.toString();
+
+    }
+    @Override
+    public int hashCode(){
+        return 97* super.hashCode()*Objects.hashCode(getPerson());
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        IndividualAccount other = (IndividualAccount) obj;
+        return Objects.equals(person,other.person) && super.equals(obj);
     }
 }

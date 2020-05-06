@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class Test {
     public static void main (String[] args) {
        // System.out.println("Я сделяль!");
-        lab3test();
+        lab4test();
        /* Service XXLInternet = new Service();
         Service XLInternet = new Service("Интернет 75мб/с", 200);
         Service sMSMobile = new Service("500 SMS", 50);
@@ -86,6 +86,38 @@ public class Test {
             System.out.println(account.getNumber());
         }
 
+    }
+
+    public static void lab4test(){
+        // проверка toString
+        Service service0 = new Service();
+        System.out.println(service0.toString());
+        // проверка hashCode
+        System.out.println(service0.hashCode());
+        // проверка equals
+        Service service1 = new Service("service1", 100, ServiceTypes.INTERNET);
+        Service service2 = new Service("service1", 200, ServiceTypes.INTERNET);
+        System.out.println(service1.equals(service2));
+        // проверка clone
+        try {
+            System.out.println(service0.clone());
+        }
+        catch (Exception e){
+
+        }
+        IndividualsTariff individualsTariff = new IndividualsTariff();
+        individualsTariff.add(service0);
+        individualsTariff.add(service1);
+        individualsTariff.add(service2);
+        System.out.println(individualsTariff.toString());
+        Tariff tariff = new EntityTariff();
+        tariff.add(service0);
+        tariff.add(service1);
+        tariff.add(service2);
+        tariff.add(service0);
+        AbstractAccount account = new EntityAccount(0,"name",tariff);
+        System.out.println(account.toString());
+        System.out.println(tariff.firstIndexOf(service0));
     }
 
 }
