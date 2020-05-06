@@ -115,6 +115,7 @@ public class Test {
         tariff.add(service1);
         tariff.add(service2);
         tariff.add(service0);
+
         AbstractAccount account = new EntityAccount(0,"name",tariff);
         System.out.println(account.toString());
         System.out.println(tariff.firstIndexOf(service0));
