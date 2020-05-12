@@ -1,5 +1,7 @@
 package rpis81.kobzareva.oop.model;
 
+import java.util.Objects;
+
 public class EntityTariff implements Tariff, Cloneable {
     private Node head;
     private Node tail;
@@ -150,12 +152,9 @@ public class EntityTariff implements Tariff, Cloneable {
     }
 
     public boolean removeService(Service service){
-        Service deletedService = remove(service.getName());
-        remove(service.getName());
-        for (Service currentAccount: getServices()){
-            return !currentAccount.equals(deletedService);
-        }
-        return false;
+        int size = getSize();
+        remove(firstIndexOf(service));
+        return size!=getSize();
     }
 
     public int firstIndexOf(Service service){
@@ -248,7 +247,7 @@ public class EntityTariff implements Tariff, Cloneable {
     public int hashCode(){
         int result=71;
         for(Service service:getServices()){
-            result*=service.hashCode();
+            result*= Objects.hash(service);
         }
         return result;
     }

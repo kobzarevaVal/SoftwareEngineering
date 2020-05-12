@@ -30,18 +30,13 @@ public class IndividualAccount extends AbstractAccount{
     public String toString(){
         StringBuilder builder = new StringBuilder("Individual account:\n");
         builder.append("holder: "+ getPerson().getName()+"\n");
-        builder.append("number: "+super.getNumber()+"\n");
-        builder.append("services\n");
-        for(Service service: getTariff().getServices()){
-            builder.append(service.toString());
-        }
+        builder.append(super.toString());
         return builder.toString();
-
     }
+
     @Override
     public int hashCode(){
         return 97* super.hashCode()*Objects.hashCode(getPerson());
-
     }
 
     @Override

@@ -33,8 +33,10 @@ public class EntityAccount extends AbstractAccount {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("Entity account: "+"\n");
-        builder.append("Entity "+entityName);
-        return String.format(super.toString(),builder);
+        builder.append("Entity "+entityName+"\n");
+        builder.append(super.toString());
+        return builder.toString();
+       // return String.format(super.toString(),builder);
     }
 
     @Override

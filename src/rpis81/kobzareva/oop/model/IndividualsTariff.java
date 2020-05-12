@@ -217,11 +217,9 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     public boolean removeService(Service service) {
-        Service deletedService = remove(firstIndexOf(service));
-        for (Service currentAccount: getServices()){
-            return !currentAccount.equals(deletedService);
-        }
-        return false;
+        int size = getSize();
+        remove(firstIndexOf(service));
+        return size!=getSize();
     }
 
     public int firstIndexOf(Service service){
@@ -246,7 +244,7 @@ public class IndividualsTariff implements Tariff,Cloneable {
     public int hashCode(){
         int result=31;
         for(Service service:getServices()){
-            result*=service.hashCode();
+            result*= Objects.hash(service);
         }
         return result;
     }

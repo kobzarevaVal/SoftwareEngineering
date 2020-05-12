@@ -89,36 +89,40 @@ public class Test {
     }
 
     public static void lab4test(){
-        // проверка toString
         Service service0 = new Service();
+
+        Person person = new Person("name","surname");
+
+        Tariff individualTariff = new IndividualsTariff();
+        individualTariff.add(service0);
+        individualTariff.add(service0);
+        individualTariff.add(service0);
+
+        Tariff entityTariff = new EntityTariff();
+        entityTariff.add(service0);
+        entityTariff.add(service0);
+        entityTariff.add(service0);
+
+        IndividualAccount individualAccount = new IndividualAccount(individualTariff,person,0);
+        EntityAccount entityAccount = new EntityAccount("name",0);
+
+        AccountManager accountManager = new AccountManager(2);
+        accountManager.add(individualAccount);
+        accountManager.add(entityAccount);
+
+        // проверка toString
         System.out.println(service0.toString());
-        // проверка hashCode
+        System.out.println(person.toString());
+        System.out.println("for individualTariff \n" + individualTariff.toString());
+        System.out.println("for entityTariff \n" + entityTariff.toString());
+        System.out.println("   " + individualAccount.toString());
+        System.out.println("   " + entityAccount.toString());
+        System.out.println(accountManager.toString());
+        // проверка HashCode
         System.out.println(service0.hashCode());
-        // проверка equals
-        Service service1 = new Service("service1", 100, ServiceTypes.INTERNET);
-        Service service2 = new Service("service1", 200, ServiceTypes.INTERNET);
-        System.out.println(service1.equals(service2));
-        // проверка clone
-        try {
-            System.out.println(service0.clone());
-        }
-        catch (Exception e){
-
-        }
-        IndividualsTariff individualsTariff = new IndividualsTariff();
-        individualsTariff.add(service0);
-        individualsTariff.add(service1);
-        individualsTariff.add(service2);
-        System.out.println(individualsTariff.toString());
-        Tariff tariff = new EntityTariff();
-        tariff.add(service0);
-        tariff.add(service1);
-        tariff.add(service2);
-        tariff.add(service0);
-
-        AbstractAccount account = new EntityAccount(0,"name",tariff);
-        System.out.println(account.toString());
-        System.out.println(tariff.firstIndexOf(service0));
+        System.out.println(person.hashCode());
+        System.out.println(individualTariff.hashCode());
+        System.out.println(entityTariff.hashCode());
+        System.out.println(entityAccount.hashCode());
     }
-
 }
