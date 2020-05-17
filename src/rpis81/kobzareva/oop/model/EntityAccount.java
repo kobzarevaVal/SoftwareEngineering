@@ -1,11 +1,14 @@
 package rpis81.kobzareva.oop.model;
 
+import java.time.LocalDate;
+import java.util.Objects;
+
 public class EntityAccount extends AbstractAccount {
     private String entityName;
 
     public EntityAccount(String entityName, long number) {
-        super(number, new EntityTariff());
-        this.entityName = entityName;
+        super(number, new EntityTariff(), LocalDate.now());
+        this.entityName  = Objects.requireNonNull(entityName,"Значение entityName не должно быть null");
         Tariff tariff = new EntityTariff();
         tariff.add(new Service());
         setTariff(tariff);
@@ -17,9 +20,9 @@ public class EntityAccount extends AbstractAccount {
    //     this.tariff.add(new Service());
    // }
 
-    public EntityAccount (long number, String entityName, Tariff tariff){
-        super(number, tariff);
-        this.entityName = entityName;
+    public EntityAccount (long number, String entityName, Tariff tariff, LocalDate registrationDate){
+        super(number, tariff,registrationDate);
+        this.entityName = Objects.requireNonNull(entityName,"Значение entityName не должно быть null");
     }
 
     public String getEntityName(){
@@ -27,7 +30,7 @@ public class EntityAccount extends AbstractAccount {
     }
 
     public void setEntityName(String entityName){
-        this.entityName = entityName;
+        Objects.requireNonNull(entityName,"Значение entityName не должно быть null");
     }
 
     @Override

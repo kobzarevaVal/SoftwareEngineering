@@ -1,21 +1,22 @@
 package rpis81.kobzareva.oop.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class IndividualAccount extends AbstractAccount{
     private Person person;
 
     public IndividualAccount(Person person, long number) {
-        super(number,new IndividualsTariff());
-        this.person = person;
+        super(number,new IndividualsTariff(), LocalDate.now());
+        this.person = Objects.requireNonNull(person,"Значение person не должно быть null");
         Tariff tariff = new IndividualsTariff();
         tariff.add(new Service());
         setTariff(tariff);
     }
 
-    public IndividualAccount(Tariff tariff, Person person, long number) {
-        super(number, tariff);
-        this.person = person;
+    public IndividualAccount(Tariff tariff, Person person, long number, LocalDate registrationDate) {
+        super(number, tariff,registrationDate);
+        this.person = Objects.requireNonNull(person,"Значение person не должно быть null");
     }
 
     public Person getPerson() {
@@ -23,7 +24,7 @@ public class IndividualAccount extends AbstractAccount{
     }
 
     public void setPerson(Person person) {
-        this.person = person;
+        this.person = Objects.requireNonNull(person,"Значение person не должно быть null");
     }
 
     @Override

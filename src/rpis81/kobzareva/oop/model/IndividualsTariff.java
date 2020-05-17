@@ -1,6 +1,9 @@
 package rpis81.kobzareva.oop.model;
 import java.lang.Cloneable;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class IndividualsTariff implements Tariff,Cloneable {
@@ -8,7 +11,7 @@ public class IndividualsTariff implements Tariff,Cloneable {
     private int size;
     private Service[] services;
     private final Service DEFAULT_SERVICE = new Service();
-
+    private String INDEX_OUT_OF_BOUND_MESSAGE = "Индекс вне границ массива";
     // по-умолчанию, инициирующий массив из 8 элементов
     public IndividualsTariff() {
         // исправлено
@@ -17,7 +20,13 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     // принимающий целое число – емкость массива, инициирующий массив указанным числом элементов
-    public IndividualsTariff(int index) {
+    public IndividualsTariff(int index) throws IndexOutOfBoundsException {
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
         services = new Service[index];
     }
 
@@ -29,6 +38,7 @@ public class IndividualsTariff implements Tariff,Cloneable {
 
     // 1) добавляющий услугу в первое свободное место в массиве - норм
     public boolean add(Service service){
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         doubleUp();
         for (int i = 0; i<services.length;i++){
             if (services[i]==null) {
@@ -43,7 +53,14 @@ public class IndividualsTariff implements Tariff,Cloneable {
     //todo: методом копирования массива System.arraycopy пользоваться можно
 
     // 2) добавляет на конкретное место в массиве
-    public boolean add(int index, Service service) {
+    public boolean add(int index, Service service) throws IndexOutOfBoundsException {
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         doubleUp();
         // свиг вправо от места вставки
         if (services.length >= index){
@@ -61,12 +78,20 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     // получить ссылку на экземпляр класса по индексу
-    public Service get(int index) {
+    public Service get(int index) throws IndexOutOfBoundsException {
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
         return services[index];
     }
 
     // получить ссылку на экземпляр класса по имени услуги
     public Service get(String serviceName) {
+        if (!hasService(serviceName)) throw new NoSuchElementException("Услуги с данным именем не сущетсвует");
+        if(Objects.isNull(serviceName)) throw new NullPointerException("Значение serviceName не должно быть null");
         for (int i = 0; i < getServices().length; i++) {
             // исправлено
             //todo: вынести логику сравнения в отдельный приватный метод и вызывать
@@ -76,12 +101,14 @@ public class IndividualsTariff implements Tariff,Cloneable {
         }
         return DEFAULT_SERVICE;
     }
+
     private boolean isEquals(int index, String serviceName){
         return getServices()[index].getName().equals(serviceName);
     }
 
     // есть ли услуга с заданным названием
     public boolean hasService(String serviceName) {
+        if(Objects.isNull(serviceName)) throw new NullPointerException("Значение serviceName не должно быть null");
         for (int i = 0; i < getServices().length; i++) {
             // исправлено
             //todo: и тут
@@ -91,7 +118,15 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     // изменить ссылку по номеру
-    public Service set(int index, Service service) {
+    public Service set(int index, Service service) throws IndexOutOfBoundsException {
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
+
         Service lastService = services[index];
         services[index] = service;
         // исправлено
@@ -100,7 +135,13 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     // удалить по номеру
-    public Service remove(int index) {
+    public Service remove(int index) throws IndexOutOfBoundsException {
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
         Service deletedService = services[index];
         services[index] = null;
         size--;
@@ -109,6 +150,8 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
     // удалить по инмени
     public Service remove(String serviceName) {
+        if (!hasService(serviceName)) throw new NoSuchElementException("Услуги с данным именем не сущетсвует");
+        if(Objects.isNull(serviceName)) throw new NullPointerException("Значение serviceName не должно быть null");
         Service tmp = new Service();
         for (Service service:getServices()){
             if (service.getName().equals(serviceName)) tmp = service;
@@ -175,14 +218,25 @@ public class IndividualsTariff implements Tariff,Cloneable {
         double totalCost = 50;
         // исправлено
         //todo: почему не обычный for?
-        for (int i=0;i<size;i++) {
-            totalCost += getServices()[i].getCost();
+        for (Service service: getServices()){
+            if (countOfActivatedDays(service)<daysInTheMonth(service))
+                totalCost+= countOfActivatedDays(service)*service.getCost()/daysInTheMonth(service);
+            else totalCost += service.getCost();
         }
         return totalCost;
     }
 
+    private int countOfActivatedDays(Service service){
+        return Period.between(service.getActivationDate(),LocalDate.now()).getDays();
+    }
+
+    private int daysInTheMonth(Service service){
+        return Period.between(service.getActivationDate(),service.getActivationDate().plusMonths(1)).getDays();
+    }
+
     @Override
     public Service[] getServices(ServiceTypes type) {
+        if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
         Service[] newServiceArray = new Service[getCountOfServices(type)];
         Service[] services = getServices();
         int counter = 0;
@@ -196,6 +250,8 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     private int getCountOfServices(ServiceTypes type){
+        if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
+
         int result = 0;
         for (int i=0;i<getServices().length;i++){
             if (services[i].getType().equals(type)) {
@@ -217,12 +273,14 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     public boolean removeService(Service service) {
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         int size = getSize();
         remove(firstIndexOf(service));
         return size!=getSize();
     }
 
     public int firstIndexOf(Service service){
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         int index=0;
         for(int i = 0; i < getServices().length; i++)
         {
@@ -232,6 +290,7 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     public int lastIndexOf(Service service){
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         int index=0;
         for(int i = getServices().length-1; i >=0 ; i--)
         {
@@ -244,7 +303,10 @@ public class IndividualsTariff implements Tariff,Cloneable {
     public int hashCode(){
         int result=31;
         for(Service service:getServices()){
-            result*= Objects.hash(service);
+          //  result*=service.hashCode();  // результат ноль
+          //  result*=Objects.hashCode(service);  // результат ноль
+           result*= (Objects.hash(service)); // я не знаю почему так, результат отрицательный в даже если такие проверки провести
+                                                                                // if(Objects.hash(service)>0)  result*= Math.abs(Objects.hash(service));
         }
         return result;
     }

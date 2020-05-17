@@ -1,5 +1,8 @@
 package rpis81.kobzareva.oop.model;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class EntityTariff implements Tariff, Cloneable {
@@ -22,21 +25,39 @@ public class EntityTariff implements Tariff, Cloneable {
 
     @Override
     public boolean add(Service service) {
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         return addNode(service);
     }
 
     @Override
-    public boolean add(int index, Service service) {
+    public boolean add(int index, Service service) throws IndexOutOfBoundsException {
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
         return addNode(index,service);
     }
 
+
     @Override
-    public Service get(int index) {
+    public Service get(int index) throws IndexOutOfBoundsException {
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
+       // if (index<=0 || index>size) throw new IndexOutOfBoundsException("Индекс вне границ массива");
         return getNode(index).getValue();
     }
 
     @Override
     public Service get(String serviceName) {
+        if (!hasService(serviceName)) throw new NoSuchElementException("Услуги с данным именем не сущетсвует");
+        if(Objects.isNull(serviceName)) throw new NullPointerException("Значение serviceName не должно быть null");
         for (int i = 0; i < size; i++){
             if (isNameEquals(i,serviceName)) {
                 return getNode(i).getValue();
@@ -44,12 +65,16 @@ public class EntityTariff implements Tariff, Cloneable {
         }
         return new Service();
     }
-    private boolean isNameEquals(int index, String serviceName){
+
+    private boolean isNameEquals(int index, String serviceName) {
         return getNode(index).getValue().getName().equals(serviceName) && getNode(index).getValue().getName() != null;
 
     }
     @Override
     public boolean hasService(String serviceName) {
+        if(Objects.isNull(serviceName)) throw new NullPointerException("Значение serviceName не должно быть null");
+        if (!hasService(serviceName)) throw new NoSuchElementException("Услуги с данным именем не сущетсвует");
+
         for(Service service:getServices()){
             if(service.getName().equals(serviceName)) return true;
         }
@@ -57,17 +82,34 @@ public class EntityTariff implements Tariff, Cloneable {
     }
 
     @Override
-    public Service set(int index, Service service) {
+    public Service set(int index, Service service) throws IndexOutOfBoundsException {
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         return setNode(index,service).getValue();
     }
 
     @Override
-    public Service remove(int index) {
+    public Service remove(int index) throws IndexOutOfBoundsException {
+        try {
+            Objects.checkIndex(index,size);
+        }
+        catch (IndexOutOfBoundsException e){
+            System.out.println("Индекс вне границ массива");
+        }
+        if (index<=0 || index>size) throw new IndexOutOfBoundsException("Индекс вне границ массива");
         return removeNode(index).getValue();
     }
 
     @Override
     public Service remove(String serviceName) {
+        if(Objects.isNull(serviceName)) throw new NullPointerException("Значение serviceName не должно быть null");
+        if (!hasService(serviceName)) throw new NoSuchElementException("Услуги с данным именем не сущетсвует");
+
         for (int i = 0; i < size; i++){
             if (get(i).getName().equals(serviceName)) {
                 return remove(i);
@@ -120,14 +162,26 @@ public class EntityTariff implements Tariff, Cloneable {
     @Override
     public double cost() {
         double cost = 50;
-        for (Service service : getServices()){
-            cost += service.getCost();
+        for (Service service: getServices()){
+            if (countOfActivatedDays(service)<daysInTheMonth(service))
+                cost+= countOfActivatedDays(service)*service.getCost()/daysInTheMonth(service);
+            else cost += service.getCost();
         }
         return cost;
     }
 
+    private int countOfActivatedDays(Service service){
+        return Period.between(service.getActivationDate(), LocalDate.now()).getDays();
+    }
+
+    private int daysInTheMonth(Service service){
+        return Period.between(service.getActivationDate(),service.getActivationDate().plusMonths(1)).getDays();
+    }
+
     @Override
     public Service[] getServices(ServiceTypes type) {
+        if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
+
         Service[] newServiceArray = new Service[getCountOfTypeServices(type)];
         Service[] services = getServices();
         int counter = 0;
@@ -141,6 +195,7 @@ public class EntityTariff implements Tariff, Cloneable {
     }
 
     private int getCountOfTypeServices(ServiceTypes type){
+        if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
         Service[] services = getServices();
         int result = 0;
         for (int i=0;i<getServices().length;i++){
@@ -152,12 +207,14 @@ public class EntityTariff implements Tariff, Cloneable {
     }
 
     public boolean removeService(Service service){
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         int size = getSize();
         remove(firstIndexOf(service));
         return size!=getSize();
     }
 
     public int firstIndexOf(Service service){
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         int index=0;
         for(int i = 0; i < getServices().length; i++)
         {
@@ -169,6 +226,7 @@ public class EntityTariff implements Tariff, Cloneable {
     }
 
     public int lastIndexOf(Service service){
+        if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         int index=0;
         for(int i = getServices().length-1; i >=0 ; i--)
         {
@@ -247,7 +305,9 @@ public class EntityTariff implements Tariff, Cloneable {
     public int hashCode(){
         int result=71;
         for(Service service:getServices()){
-            result*= Objects.hash(service);
+          //  result*=service.hashCode(); // результат - 0
+          //  result*=Objects.hashCode(service); // результат - 0, даже с проверкой service!=null
+           if (Objects.hash(service)>0) result*= Objects.hash(service); // отрицательный результат
         }
         return result;
     }

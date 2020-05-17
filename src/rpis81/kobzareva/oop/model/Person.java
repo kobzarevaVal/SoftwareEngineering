@@ -6,8 +6,8 @@ public class Person {
     private String name;
     private String surname;
     public Person(String name,String surname){
-        this.name = name;
-        this.surname = surname;
+        this.name = Objects.requireNonNull(name,"Значение name не должно быть null");
+        this.surname = Objects.requireNonNull(surname,"Значение surname не должно быть null");
     }
     public String getName(){ return name; }
     public void setName(String newName) {name=newName; }
