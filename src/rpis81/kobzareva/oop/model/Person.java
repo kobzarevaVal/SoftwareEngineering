@@ -1,5 +1,4 @@
 package rpis81.kobzareva.oop.model;
-
 import java.util.Objects;
 
 public class Person {
@@ -10,9 +9,9 @@ public class Person {
         this.surname = Objects.requireNonNull(surname,"Значение surname не должно быть null");
     }
     public String getName(){ return name; }
-    public void setName(String newName) {name=newName; }
+    public void setName(String name) {this.name=Objects.requireNonNull(name,"Значение name не должно быть null"); }
     public String getSurname(){ return surname; }
-    public void setSurname(String newSurname) {surname=newSurname; }
+    public void setSurname(String surname) { this.surname=Objects.requireNonNull(surname,"Значение name не должно быть null"); }
 
     @Override
     public String toString(){

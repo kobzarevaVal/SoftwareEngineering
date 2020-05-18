@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class IndividualAccount extends AbstractAccount{
     private Person person;
+    private final LocalDate hyi = LocalDate.now();
 
     public IndividualAccount(Person person, long number) {
         super(number,new IndividualsTariff(), LocalDate.now());

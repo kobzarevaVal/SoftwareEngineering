@@ -2,28 +2,30 @@ package rpis81.kobzareva.oop;
 import rpis81.kobzareva.oop.model.*;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Arrays;
 
 public class Test {
     public static void main (String[] args) {
        // System.out.println("Я сделяль!");
-        lab5test();
-       /* Service XXLInternet = new Service();
-        Service XLInternet = new Service("Интернет 75мб/с", 200);
-        Service sMSMobile = new Service("500 SMS", 50);
-        IndividualsTariff individualsTariff = new IndividualsTariff();
-        individualsTariff.add(XXLInternet);
-        individualsTariff.add(XLInternet);
-        individualsTariff.add(sMSMobile);
-        System.out.println("добавить в конкретное место");
-        System.out.println(individualsTariff.add(4,sMSMobile));
-        System.out.println("Массив услуг");
-        // тесты плохого нерабочего метода
-        for (Service service:individualsTariff.GetServices()){
-           // System.out.println(service.getName());
+        //lab5test();
+        Service service = new Service("name",200,ServiceTypes.ADDITIONAL_SERVICE,LocalDate.now());
+        Person person = new Person("nkl","nlk");
+       // AbstractAccount account = new IndividualAccount(person,111);
+        EntityTariff entityTariff = new EntityTariff();
+        entityTariff.add(service);
+        entityTariff.add(service);
+        entityTariff.add(service);
+        entityTariff.add(3,service);
 
-        }*/
+    }
 
+    private int daysInTheMonth(Service service){
+        return Period.between(service.getActivationDate(),service.getActivationDate().plusMonths(1)).getDays();
+    }
+
+    private int countOfActivatedDays(Service service){
+        return Period.between(service.getActivationDate(),LocalDate.now()).getDays();
     }
 
     public static void lab4test() {

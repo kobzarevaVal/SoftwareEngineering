@@ -2,8 +2,9 @@ package rpis81.kobzareva.oop.model;
 import java.lang.Cloneable;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.lang.Comparable;
 
-public final class Service implements Cloneable {
+public final class Service implements Cloneable, Comparable<Service> {
     final private double cost;
     final private String name;
     final private ServiceTypes type;
@@ -20,11 +21,11 @@ public final class Service implements Cloneable {
         this.activationDate = DEFAULT_DATE;
     }
     public Service(String name, double cost, ServiceTypes type, LocalDate activationDate){
+        this.activationDate = Objects.requireNonNull(activationDate,"Значение activationDate не должно быть null");
         if (activationDate.isAfter(LocalDate.now()) || cost<=0) throw new IllegalArgumentException("Некорректная дата или цена");
         this.cost = cost;
         this.name = Objects.requireNonNull(name,"Значение name не должно быть null");
         this.type = Objects.requireNonNull(type,"Значение type не должно быть null");
-        this.activationDate = Objects.requireNonNull(activationDate,"Значение activationDate не должно быть null");
     }
     public String getName(){ return name; }
     public double getCost(){return cost;};
@@ -65,4 +66,8 @@ public final class Service implements Cloneable {
         return super.clone();
     }
 
+    @Override
+    public int compareTo(Service o) {
+        return 0;
+    }
 }

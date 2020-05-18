@@ -38,14 +38,11 @@ public class AccountManager {
         }
         return false;
     }
+
+
     // 2) добавляет на конкретное место в массиве
-    public boolean add(int index, Account account) throws DublicateAccountNumberException, IndexOutOfBoundsException{
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
+    public boolean add(int index, Account account) throws DublicateAccountNumberException{
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
         if (index<=0 || index>size) throw new IndexOutOfBoundsException("Индекс вне границ массива");
         if(Objects.isNull(account)) throw new NullPointerException("Значение account не должно быть null");
 
@@ -56,6 +53,11 @@ public class AccountManager {
         }
         return add(account);
     }
+
+    private boolean checkIndex(int index){
+        return index < 0 || index >= size;
+    }
+
     private void doubleUp() {
         if (accounts[accounts.length - 1] != null) {
             Account[] updatedRentedAccounts = new Account[size * 2];
@@ -65,23 +67,16 @@ public class AccountManager {
     }
 
     // 3) возвращающий ссылку на экземпляр класса Account по его номеру в массиве
-    public Account getAccount(int index) throws IndexOutOfBoundsException {
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
-
-        return accounts[index];
+    public Account getAccount(int index) {
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
+        return getAccounts()[index];
     }
 
     // 4) изменяющий ссылку на экземпляр класса Account по его номеру в массиве
     public Account setAccount(long number, Account account) throws DublicateAccountNumberException {
         if (isAccountExists(account.getNumber())) throw new DublicateAccountNumberException("Аккаунт с таким номером уже существует");
         if(Objects.isNull(account)) throw new NullPointerException("Значение account не должно быть null");
-        if (number< MIN_NUMBER || number>MAX_NUMBER) throw new IllegalAccountNumber("Номер вне границ диапазона");
-        if (!isAccountExists(number)) throw new NoSuchElementException("Элемента с таким номером не существует");
+        if (!isInRange(number)) throw new IllegalAccountNumber("Номер вне границ диапазона");
 
         Account lostAccount;
         for (int i = 0; i < accounts.length; i++) {
@@ -95,6 +90,10 @@ public class AccountManager {
         return null;
     }
 
+    public boolean isInRange(long number){
+        return number< MIN_NUMBER || number>MAX_NUMBER;
+    }
+
     private boolean isAccountExists(long number){
         for (Account account:getAccounts()){
             if(account.getNumber()==number) return true;
@@ -103,13 +102,8 @@ public class AccountManager {
     }
 
     // удалить по номеру
-    public Account remove(int index) throws IndexOutOfBoundsException {
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
+    public Account remove(int index) {
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
 
         Account lostAccount = accounts[index];
         accounts[index] = null;
@@ -144,7 +138,8 @@ public class AccountManager {
 
     // 8) возвращающий ссылку на экземпляр класса IndividualsTariff для счета с заданным номером
     public Tariff getTariff(long accountNumber) {
-        if (accountNumber< MIN_NUMBER || accountNumber>MAX_NUMBER) throw new IllegalAccountNumber("Номер вне границ диапазона");
+        if (isInRange(accountNumber)) throw new IllegalAccountNumber("Номер вне границ диапазона");
+        if (!isAccountExists(accountNumber)) throw new NoSuchElementException("Элемента с таким номером не существует");
 
         for(int i=0;i<size;i++){
             if (isEquals(i,accountNumber)) return getAccounts()[i].getTariff();
@@ -152,22 +147,19 @@ public class AccountManager {
 
         return DEFAULT_TARIFF;
     }
-    private boolean isEquals(int index, long accountNumber) throws IndexOutOfBoundsException {
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
-      //  if (index<=0 || index>size) throw new IndexOutOfBoundsException("Индекс вне границ массива");
-      //  if (accountNumber< MIN_NUMBER || accountNumber>MAX_NUMBER) throw new IllegalAccountNumber("Номер вне границ диапазона");
+    private boolean isEquals(int index, long accountNumber) {
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
+
+        //  if (index<=0 || index>size) throw new IndexOutOfBoundsException("Индекс вне границ массива");
+        if (isInRange(accountNumber)) throw new IllegalAccountNumber("Номер вне границ диапазона");
         return getAccounts()[index].getNumber()==accountNumber;
     }
 
     // 9) изменяющий ссылку на экземпляр класса IndividualsTariff для счета с заданным номером
-    public Tariff setTariff(long accountNumber, Tariff tariff) {
+    public Tariff setTariff(long accountNumber, Tariff tariff) { // ОНО ТУТ БЛЯДЬ АААААААААААААААААААААААААААААААААААААААААААААААААААААААААА
         if(Objects.isNull(tariff)) throw new NullPointerException("Значение tariff не должно быть null");
-        if (accountNumber< MIN_NUMBER || accountNumber>MAX_NUMBER) throw new IllegalAccountNumber("Номер вне границ диапазона");
+        if (isInRange(accountNumber)) throw new IllegalAccountNumber("Номер вне границ диапазона");
+        if (!isAccountExists(accountNumber)) throw new NoSuchElementException("Элемента с таким номером не существует");
 
         Tariff individualsTariff = getTariff(accountNumber);
         for (int i = 0; i < getAccounts().length; i++) {
@@ -255,7 +247,8 @@ public class AccountManager {
     }
     //  возвращающий ссылку на счет по номеру счета
     public Account getAccount (long accountNumber){
-        if (accountNumber< MIN_NUMBER || accountNumber>MAX_NUMBER) throw new IllegalAccountNumber("Номер вне границ диапазона");
+        if (isInRange(accountNumber)) throw new IllegalAccountNumber("Номер вне границ диапазона");
+        if (!isAccountExists(accountNumber)) throw new NoSuchElementException("Элемента с таким номером не существует");
         for (Account account: getAccounts()){
             if (accountNumber==account.getNumber()) return account;
         }

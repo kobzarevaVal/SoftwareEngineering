@@ -3,15 +3,15 @@ import java.lang.Cloneable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class IndividualsTariff implements Tariff,Cloneable {
+public class IndividualsTariff implements Tariff {
     private final static int DEFAULT_SIZE = 8;
     private int size;
     private Service[] services;
     private final Service DEFAULT_SERVICE = new Service();
-    private String INDEX_OUT_OF_BOUND_MESSAGE = "Индекс вне границ массива";
     // по-умолчанию, инициирующий массив из 8 элементов
     public IndividualsTariff() {
         // исправлено
@@ -20,14 +20,14 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     // принимающий целое число – емкость массива, инициирующий массив указанным числом элементов
-    public IndividualsTariff(int index) throws IndexOutOfBoundsException {
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
+    public IndividualsTariff(int index) {
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
+
         services = new Service[index];
+    }
+
+    private boolean checkIndex(int index){
+        return index < 0 || index >= getSize();
     }
 
     // принимающий массив услуг. В этом конструкторе происходит копирование элементов в
@@ -53,13 +53,8 @@ public class IndividualsTariff implements Tariff,Cloneable {
     //todo: методом копирования массива System.arraycopy пользоваться можно
 
     // 2) добавляет на конкретное место в массиве
-    public boolean add(int index, Service service) throws IndexOutOfBoundsException {
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
+    public boolean add(int index, Service service) {
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
         if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         doubleUp();
         // свиг вправо от места вставки
@@ -78,13 +73,9 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     // получить ссылку на экземпляр класса по индексу
-    public Service get(int index) throws IndexOutOfBoundsException {
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
+    public Service get(int index) {
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
+        if (!hasService(services[index].getName())) throw new NoSuchElementException("Услуги с данным именем не сущетсвует");
         return services[index];
     }
 
@@ -118,30 +109,21 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     // изменить ссылку по номеру
-    public Service set(int index, Service service) throws IndexOutOfBoundsException {
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
+    public Service set(int index, Service service) {
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
+
         if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
 
-        Service lastService = services[index];
+        Service lоstService = services[index];
         services[index] = service;
         // исправлено
         //todo: lost больше подходит, чем last
-        return lastService;
+        return lоstService;
     }
 
     // удалить по номеру
-    public Service remove(int index) throws IndexOutOfBoundsException {
-        try {
-            Objects.checkIndex(index,size);
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("Индекс вне границ массива");
-        }
+    public Service remove(int index) {
+        if (checkIndex(index)) throw new IndexOutOfBoundsException("Индекс вне границ диапазона");
         Service deletedService = services[index];
         services[index] = null;
         size--;
@@ -150,8 +132,8 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
     // удалить по инмени
     public Service remove(String serviceName) {
-        if (!hasService(serviceName)) throw new NoSuchElementException("Услуги с данным именем не сущетсвует");
         if(Objects.isNull(serviceName)) throw new NullPointerException("Значение serviceName не должно быть null");
+        if (!hasService(serviceName)) throw new NoSuchElementException("Услуги с данным именем не сущетсвует");
         Service tmp = new Service();
         for (Service service:getServices()){
             if (service.getName().equals(serviceName)) tmp = service;
@@ -214,24 +196,30 @@ public class IndividualsTariff implements Tariff,Cloneable {
     }
 
     // стоимость тарифа
+    @Override
     public double cost() {
-        double totalCost = 50;
-        // исправлено
-        //todo: почему не обычный for?
-        for (Service service: getServices()){
-            if (countOfActivatedDays(service)<daysInTheMonth(service))
-                totalCost+= countOfActivatedDays(service)*service.getCost()/daysInTheMonth(service);
-            else totalCost += service.getCost();
+        double cost = 50;
+        LocalDate accountCreateDate;
+        Period oneMonth;
+        for( Service service: getServices()){
+            if(!isMonth(service)){
+                accountCreateDate = service.getActivationDate();
+                oneMonth = Period.between(accountCreateDate,LocalDate.now());
+                cost += (oneMonth.getDays() * service.getCost())/ LocalDate.now().getDayOfMonth();
+            }else{
+                cost +=service.getCost();
+            }
         }
-        return totalCost;
+        return cost;
     }
 
-    private int countOfActivatedDays(Service service){
-        return Period.between(service.getActivationDate(),LocalDate.now()).getDays();
-    }
-
-    private int daysInTheMonth(Service service){
-        return Period.between(service.getActivationDate(),service.getActivationDate().plusMonths(1)).getDays();
+    public boolean isMonth(Service service){
+        LocalDate accountCreateDate = service.getActivationDate();
+        Period oneMonth = Period.between(accountCreateDate,LocalDate.now());
+        if(oneMonth.getMonths() >=1){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -251,7 +239,6 @@ public class IndividualsTariff implements Tariff,Cloneable {
 
     private int getCountOfServices(ServiceTypes type){
         if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
-
         int result = 0;
         for (int i=0;i<getServices().length;i++){
             if (services[i].getType().equals(type)) {
@@ -327,5 +314,10 @@ public class IndividualsTariff implements Tariff,Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Override
+    public Iterator<Service> iterator() {
+        return null;
     }
 }

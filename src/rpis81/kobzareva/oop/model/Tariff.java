@@ -1,6 +1,6 @@
 package rpis81.kobzareva.oop.model;
 
-public interface Tariff {
+public interface Tariff extends Iterable<Service> {
     boolean add(Service service);
     boolean add(int index, Service service);
     Service get(int index);
