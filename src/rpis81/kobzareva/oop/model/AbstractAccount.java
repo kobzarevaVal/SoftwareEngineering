@@ -50,8 +50,10 @@ public abstract class AbstractAccount implements Account{
 
     @Override
     public int hashCode(){
-       return Objects.hash(number,getTariff().getSize(),registrationDate);
-      //  return Long.hashCode(number)*Integer.hashCode(getTariff().getSize());
+        Service[] services = tariff.getServices();
+        int sizeOfArray= services.length;
+        return Double.hashCode(number) * getTariff().getSize() * Objects.hashCode(registrationDate);
+     //  return Objects.hash(number,getTariff().getSize(),registrationDate);
     }
 
     @Override

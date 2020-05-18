@@ -43,7 +43,7 @@ public final class Service implements Cloneable, Comparable<Service> {
 
     @Override
     public int hashCode(){
-        return name.hashCode()*type.hashCode()*Double.hashCode(cost)*Objects.hash(activationDate);
+        return Objects.hashCode(name)*Objects.hashCode(type)*Double.hashCode(cost)*Objects.hashCode(activationDate);
     }
 
     @Override

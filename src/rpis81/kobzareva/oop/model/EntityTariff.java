@@ -112,7 +112,7 @@ public class EntityTariff implements Tariff, Cloneable {
     public Service[] getServices() {
         Service[] services = new Service[size+1];
         for(int i = 0; i < size+1; i++) {
-            services[i] = get(i);
+            services[i] = getNode(i).getValue();           // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         return filterServices(services);
     }
@@ -295,13 +295,12 @@ public class EntityTariff implements Tariff, Cloneable {
 
     @Override
     public int hashCode(){
-        int result=71;
-        for(Service service:getServices()){
-          //  result*=service.hashCode(); // результат - 0
-          //  result*=Objects.hashCode(service); // результат - 0, даже с проверкой service!=null
-           if (Objects.hash(service)>0) result*= Objects.hash(service); // отрицательный результат
+        int hashCode = 71;
+        Service[] services = getServices();
+        for(int i = 0; i<services.length; i++){
+            hashCode *=services.hashCode();
         }
-        return result;
+        return hashCode;
     }
 
     @Override

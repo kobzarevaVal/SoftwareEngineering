@@ -288,14 +288,12 @@ public class IndividualsTariff implements Tariff {
 
     @Override
     public int hashCode(){
-        int result=31;
-        for(Service service:getServices()){
-          //  result*=service.hashCode();  // результат ноль
-          //  result*=Objects.hashCode(service);  // результат ноль
-           result*= (Objects.hash(service)); // я не знаю почему так, результат отрицательный в даже если такие проверки провести
-                                                                                // if(Objects.hash(service)>0)  result*= Math.abs(Objects.hash(service));
+        int hashCode= 31;
+        Service[] services = getServices();
+        for(int i=0; i<services.length; i++){
+            hashCode *=services.hashCode();
         }
-        return result;
+        return hashCode;
     }
 
     @Override

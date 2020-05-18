@@ -8,16 +8,7 @@ import java.util.Arrays;
 public class Test {
     public static void main (String[] args) {
        // System.out.println("Я сделяль!");
-        //lab5test();
-        Service service = new Service("name",200,ServiceTypes.ADDITIONAL_SERVICE,LocalDate.now());
-        Person person = new Person("nkl","nlk");
-       // AbstractAccount account = new IndividualAccount(person,111);
-        EntityTariff entityTariff = new EntityTariff();
-        entityTariff.add(service);
-        entityTariff.add(service);
-        entityTariff.add(service);
-        entityTariff.add(3,service);
-
+        lab5test();
     }
 
     private int daysInTheMonth(Service service){
@@ -58,15 +49,13 @@ public class Test {
         System.out.println(service0.toString());
         System.out.println(person.toString());
         System.out.println("for individualTariff \n" + individualTariff.toString());
-        System.out.println("for entityTariff \n" + entityTariff.toString());
         System.out.println("   " + individualAccount.toString());
-        System.out.println("   " + entityAccount.toString());
         System.out.println(accountManager.toString());
         // проверка HashCode
         System.out.println(service0.hashCode());
         System.out.println(person.hashCode());
-        System.out.println(entityTariff.hashCode());
-
+        System.out.println(individualTariff.hashCode());
+        System.out.println(individualAccount.hashCode());
     }
 
     public static void lab5test(){
