@@ -3,8 +3,8 @@ import java.lang.Cloneable;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.lang.Comparable;
-
-public final class Service implements Cloneable, Comparable<Service> {
+                                                    // Lb 6
+public final class Service implements Cloneable/*, Comparable<Service>*/ {
     final private double cost;
     final private String name;
     final private ServiceTypes type;
@@ -65,9 +65,9 @@ public final class Service implements Cloneable, Comparable<Service> {
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
-
-    @Override
+    // Lb 6
+   /* @Override
     public int compareTo(Service o) {
-        return 0;
-    }
+        return (int)(this.cost - o.cost);
+    }*/
 }

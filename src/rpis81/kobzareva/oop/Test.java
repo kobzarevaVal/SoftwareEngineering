@@ -51,32 +51,32 @@ public class Test {
         System.out.println("for individualTariff \n" + individualTariff.toString());
         System.out.println("   " + individualAccount.toString());
         System.out.println(accountManager.toString());
+        System.out.println("Проверка hashCode:");
         // проверка HashCode
         System.out.println(service0.hashCode());
         System.out.println(person.hashCode());
         System.out.println(individualTariff.hashCode());
         System.out.println(individualAccount.hashCode());
+        System.out.println(entityTariff.hashCode());
+        System.out.println(entityAccount.hashCode());
+
     }
 
     public static void lab5test(){
         Service service0 = new Service();
         System.out.println("с датой активации "+service0.toString());
         System.out.println("дата активации service0: "+service0.getActivationDate());
-        System.out.println(service0.hashCode());
 
         EntityAccount entityAccount = new EntityAccount("name",999999999999998L);
         AccountManager accountManager = new AccountManager(3);
 
         try {
-            accountManager.add(entityAccount);
-            accountManager.add(entityAccount);
           //  Service service = new Service(null,5,ServiceTypes.ADDITIONAL_SERVICE, LocalDate.now());
           //  Person person = new Person(null,"surname");
           //  EntityAccount entityAccount = new EntityAccount(null,999999999999998L);
           //  EntityTariff entityTariff = new EntityTariff();
            // entityTariff.get(null);
-         //   entityAccount.setTariff(null);
-            accountManager.add(20,entityAccount);
+            entityAccount.setTariff(null);
 
 
         }
@@ -89,6 +89,5 @@ public class Test {
         entityTariff.add(service0);
         entityTariff.add(service0);
         System.out.println("размер "+entityTariff.getSize());
-        entityTariff.add(10,service0);
     }
 }

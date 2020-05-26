@@ -1,10 +1,9 @@
 package rpis81.kobzareva.oop.model;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 //todo: комментарии из IndividualsTariff применимы сюда
-public class AccountManager {
+                            // Lb 6
+public class AccountManager /* implements Iterable<Account>*/ {
     private Account[] accounts;
     private int size;
     // private final static Account DEFAULT_ACCOUNT = new Account();
@@ -156,7 +155,7 @@ public class AccountManager {
     }
 
     // 9) изменяющий ссылку на экземпляр класса IndividualsTariff для счета с заданным номером
-    public Tariff setTariff(long accountNumber, Tariff tariff) { // ОНО ТУТ БЛЯДЬ АААААААААААААААААААААААААААААААААААААААААААААААААААААААААА
+    public Tariff setTariff(long accountNumber, Tariff tariff) {
         if(Objects.isNull(tariff)) throw new NullPointerException("Значение tariff не должно быть null");
         if (isInRange(accountNumber)) throw new IllegalAccountNumber("Номер вне границ диапазона");
         if (!isAccountExists(accountNumber)) throw new NoSuchElementException("Элемента с таким номером не существует");
@@ -168,7 +167,7 @@ public class AccountManager {
         return individualsTariff;
     }
 
-    public Account[] getAccounts (ServiceTypes serviceType){
+    public Account[] getAccounts(ServiceTypes serviceType){
         if(Objects.isNull(serviceType)) throw new NullPointerException("Значение serviceType не должно быть null");
 
         Account[] getAccountsArray = new Account[size];
@@ -185,6 +184,33 @@ public class AccountManager {
         System.arraycopy(getAccountsArray, 0, shortArray, 0, index);
         return shortArray;
     }
+    // Lb 7. возвращающий массив счетов, у которых подключена услуга заданного типа по интерфейсной ссылке Set<Account>
+   /* public Set<Account> getAccounts(ServiceTypes serviceTypes){
+        HashSet<Account> accountHashSet = new HashSet<>();
+        Objects.requireNonNull(serviceTypes,"Значение serviceTypes не может быть Null");
+        for(Account account :getAccounts()){
+            for(Service service :(Service[]) account.getTariff().toArray()){
+                if(service.getType()==serviceTypes){
+                    accountHashSet.add(account);
+                }else
+                    throw new NoSuchElementException("Элемент не найден ");
+            }
+        }
+        return accountHashSet;
+    }*/
+
+    // Lb 7. возвращающий массив счетов, у которых подключена услуга с заданным названием по интерфейсной ссылке Set<Account>
+    /*public Set<Account> getAccounts(String serviceName){
+        HashSet<Account> accountHashSet = new HashSet<>();
+        for(Account account : getAccounts()){
+            for(Service service : (Service[]) account.getTariff().toArray()){
+                if(service.equals(serviceName)){
+                    accountHashSet.add(account);
+                }
+            }
+        }
+        return accountHashSet;
+    }*/
 
     public Account[] getIndividualAccounts(){
         Account[] getAccountsArray = new Account[getCountOfAccount()];
@@ -200,6 +226,18 @@ public class AccountManager {
         return shortArray;
     }
 
+    /* Lb 7. возвращающий массив счетов физ. лиц по интерфейсной ссылке List<Account>
+    public List<Account> getIndividualAccounts(){
+        ArrayList<Account> accountArrayList = new ArrayList<>() ;
+        for(Account account : getAccounts()){
+            if(account instanceof IndividualAccount){
+                accountArrayList.add(account);
+            }
+        }
+        return accountArrayList;
+    }
+     */
+
     public Account[] getEntityAccounts(){
         Account[] getAccountsArray = new Account[getCountOfAccount()];
         int index = 0;
@@ -214,6 +252,20 @@ public class AccountManager {
         return shortArray;
     }
 
+    /* Lb 7. возвращающий массив счетов юр. лиц по интерфейсной ссылке List<Account>
+    public List<Account> getEntityAccounts(){
+        LinkedList<Account> accountLinkedList = new LinkedList<>();
+        for(Account account:getAccounts()){
+            if(account instanceof EntityAccount){
+                accountLinkedList.add(account);
+            }else{
+                throw  new NoSuchElementException("Элемент не найден");
+            }
+        }
+        return accountLinkedList;
+    }
+     */
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("accounts:\n");
@@ -222,6 +274,14 @@ public class AccountManager {
         }
         return builder.toString();
     }
+    // Lb 6
+    // @Override
+    //    public String toString() {
+    //        Account[] accounts = getAccount();
+    //        StringBuilder stringBuilder = new StringBuilder();
+    //        iterator().forEachRemaining(account -> stringBuilder.append(account.toString()).append("\n"));
+    //        return stringBuilder.toString();
+    //    }
 
     public boolean removeAccount(Account account){
         if(Objects.isNull(account)) throw new NullPointerException("Значение account не должно быть null");
@@ -254,4 +314,26 @@ public class AccountManager {
         }
         return null;
     }
+    // Lb 6. Методы интерфейса Iterable и класс ServiceIterator
+   /* @Override
+    public Iterator<Account> iterator() {
+        AccountIterator iterator = new AccountIterator();
+        return iterator();
+    }
+
+
+    private class AccountIterator implements java.util.Iterator<Account>{
+        int index  = 0;
+
+        @Override
+        public boolean hasNext() {
+            return index<getCountOfAccount();
+        }
+
+        @Override
+        public Account next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            return getAccounts()[index++];
+        }
+    }*/
 }
