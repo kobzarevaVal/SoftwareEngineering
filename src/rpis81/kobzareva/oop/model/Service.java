@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.lang.Comparable;
                                                     // Lb 6
-public final class Service implements Cloneable/*, Comparable<Service>*/ {
+public final class Service implements Cloneable, Comparable<Service> {
     final private double cost;
     final private String name;
     final private ServiceTypes type;
@@ -66,8 +66,8 @@ public final class Service implements Cloneable/*, Comparable<Service>*/ {
         return super.clone();
     }
     // Lb 6
-   /* @Override
+    @Override
     public int compareTo(Service o) {
         return (int)(this.cost - o.cost);
-    }*/
+    }
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityTariff implements Tariff, Cloneable {
     private Node head;
@@ -29,12 +30,6 @@ public class EntityTariff implements Tariff, Cloneable {
         if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
         return addNode(service);
     }
-
-
-
-
-
-
 
     @Override
     public boolean add(int index, Service service) {
@@ -134,7 +129,7 @@ public class EntityTariff implements Tariff, Cloneable {
         return services;
     }
 
-    @Override
+   /* @Override
     public Service[] sortedServicesByCost() {
         Service[] sortingServices = getServices();
         for(int i = sortingServices.length-1 ; i > 0 ; i--){
@@ -147,14 +142,14 @@ public class EntityTariff implements Tariff, Cloneable {
             }
         }
         return (sortingServices);
-    }
+    }*/
     // Lb 6
-   /* @Override
+    @Override
     public Service[] sortedServicesByCost() {
         Service[] services = getServices();
         Arrays.sort(services,Service::compareTo);
         return services;
-    }*/
+    }
 
     // Lb 7
     // sortedServicesByCost стал дефолтным в интерфейсе Tariff
@@ -313,24 +308,23 @@ public class EntityTariff implements Tariff, Cloneable {
         return replacedService;
     }
 
-    @Override
+   /* @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("Services:\n");
         for(Service service:getServices()){
             builder.append(service.toString());
         }
         return builder.toString();
-
-    }
+    }*/
     // Lb 6
-   /* @Override
+    @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("Services:\n");
         iterator().forEachRemaining(service1 -> builder.append(service1.toString()));
         return builder.toString();
-    }*/
+    }
 
-    @Override
+   /* @Override
     public int hashCode(){
         int hashCode = 71;
         Service[] services = getServices();
@@ -338,14 +332,14 @@ public class EntityTariff implements Tariff, Cloneable {
             hashCode *=services.hashCode();
         }
         return hashCode;
-    }
+    }*/
 
-    // @Override
-    //    public int hashCode() {
-    //        AtomicInteger atomicInteger = new AtomicInteger(31 *size());
-    //        iterator().forEachRemaining(service -> atomicInteger.updateAndGet(value -> value ^ service.hashCode()));
-    //        return atomicInteger.get();
-    //    }
+     @Override
+        public int hashCode() {
+            AtomicInteger atomicInteger = new AtomicInteger(31 *getSize());
+            iterator().forEachRemaining(service -> atomicInteger.updateAndGet(value -> value ^ service.hashCode()));
+            return atomicInteger.get();
+        }
 
     @Override
     public boolean equals(Object obj){
@@ -365,7 +359,7 @@ public class EntityTariff implements Tariff, Cloneable {
     }
 
     // Lb 6. Методы интерфейса Iterable и класс ServiceIterator
-   /* @Override
+    @Override
     public Iterator<Service> iterator() {
         return new ServiceIterator();
     }
@@ -382,7 +376,7 @@ public class EntityTariff implements Tariff, Cloneable {
             if (!hasNext()) throw new NoSuchElementException();
             return getServices()[index++];
         }
-    }*/
+    }
    // Lb 7. Методы интерфейса Collection
   /*  @Override
     public boolean addAll(Collection<? extends Service> c) {

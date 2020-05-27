@@ -3,7 +3,7 @@ import java.util.*;
 
 //todo: комментарии из IndividualsTariff применимы сюда
                             // Lb 6
-public class AccountManager /* implements Iterable<Account>*/ {
+public class AccountManager  implements Iterable<Account> {
     private Account[] accounts;
     private int size;
     // private final static Account DEFAULT_ACCOUNT = new Account();
@@ -15,7 +15,7 @@ public class AccountManager /* implements Iterable<Account>*/ {
     //новый массив, и ссылка на него записывается в атрибут.
     public AccountManager(Account[] accountArray) {
         this.accounts = accountArray;
-        //  this.size = accountArray.length;
+          this.size = accountArray.length;
     }
 
     // принимающий один параметр – число счетов, инициализирующий массив соответствующим числом элементов
@@ -266,22 +266,22 @@ public class AccountManager /* implements Iterable<Account>*/ {
     }
      */
 
-    @Override
+   /* @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("accounts:\n");
         for(Account account: getAccounts()){
             builder.append(account.toString());
         }
         return builder.toString();
-    }
+    }*/
     // Lb 6
-    // @Override
-    //    public String toString() {
-    //        Account[] accounts = getAccount();
-    //        StringBuilder stringBuilder = new StringBuilder();
-    //        iterator().forEachRemaining(account -> stringBuilder.append(account.toString()).append("\n"));
-    //        return stringBuilder.toString();
-    //    }
+     @Override
+        public String toString() {
+            Account[] accounts = getAccounts();
+            StringBuilder stringBuilder = new StringBuilder();
+            iterator().forEachRemaining(account -> stringBuilder.append(account.toString()).append("\n"));
+            return stringBuilder.toString();
+        }
 
     public boolean removeAccount(Account account){
         if(Objects.isNull(account)) throw new NullPointerException("Значение account не должно быть null");
@@ -315,7 +315,7 @@ public class AccountManager /* implements Iterable<Account>*/ {
         return null;
     }
     // Lb 6. Методы интерфейса Iterable и класс ServiceIterator
-   /* @Override
+    @Override
     public Iterator<Account> iterator() {
         AccountIterator iterator = new AccountIterator();
         return iterator();
@@ -335,5 +335,5 @@ public class AccountManager /* implements Iterable<Account>*/ {
             if (!hasNext()) throw new NoSuchElementException();
             return getAccounts()[index++];
         }
-    }*/
+    }
 }

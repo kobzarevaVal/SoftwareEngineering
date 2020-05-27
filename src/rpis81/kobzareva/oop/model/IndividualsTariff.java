@@ -3,6 +3,7 @@ import java.lang.Cloneable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class IndividualsTariff implements Tariff {
 
@@ -178,7 +179,7 @@ public class IndividualsTariff implements Tariff {
         return services;
     }
 
-    @Override
+   /* @Override
     public Service[] sortedServicesByCost() {
         Service[] sortingServices = getServices();
         for(int i = sortingServices.length-1 ; i > 0 ; i--){
@@ -191,14 +192,14 @@ public class IndividualsTariff implements Tariff {
             }
         }
         return (sortingServices);
-    }
+    }*/
 
     // Lb 6
-   /* public Service[] sortedServicesByCost() {
+    public Service[] sortedServicesByCost() {
         Service[] services = getServices();
         Arrays.sort(services,Service::compareTo);
         return services;
-    }*/
+    }
 
    // Lb 7
     // sortedServicesByCost стал дефолтным в интерфейсе Tariff
@@ -271,21 +272,21 @@ public class IndividualsTariff implements Tariff {
         return result;
     }
 
-    @Override
+   /* @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("Services:\n");
         for(Service service:getServices()){
             builder.append(service.toString());
         }
         return builder.toString();
-    }
+    }*/
     // Lb 6
-   /* @Override
+    @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("Services:\n");
         iterator().forEachRemaining(service1 -> builder.append(service1.toString()));
         return builder.toString();
-    }*/
+    }
 
     public boolean removeService(Service service) {
         if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
@@ -314,7 +315,7 @@ public class IndividualsTariff implements Tariff {
         return index;
     }
 
-    @Override
+  /*  @Override
     public int hashCode(){
         int hashCode= 31;
         Service[] services = getServices();
@@ -322,14 +323,14 @@ public class IndividualsTariff implements Tariff {
             hashCode *=services.hashCode();
         }
         return hashCode;
-    }
+    }*/
     // Lb 6
-    // @Override
-    //    public int hashCode() {
-    //        AtomicInteger atomicInteger = new AtomicInteger(31 *size());
-    //        iterator().forEachRemaining(service -> atomicInteger.updateAndGet(value -> value ^ service.hashCode()));
-    //        return atomicInteger.get();
-    //    }
+     @Override
+        public int hashCode() {
+            AtomicInteger atomicInteger = new AtomicInteger(31 *getSize());
+            iterator().forEachRemaining(service -> atomicInteger.updateAndGet(value -> value ^ service.hashCode()));
+            return atomicInteger.get();
+        }
 
     @Override
     public boolean equals(Object obj){
@@ -350,7 +351,7 @@ public class IndividualsTariff implements Tariff {
     }
 
     // Lb 6. Методы интерфейса Iterable и класс ServiceIterator
-   /* @Override
+    @Override
     public Iterator<Service> iterator() {
         return new ServiceIterator();
     }
@@ -367,7 +368,7 @@ public class IndividualsTariff implements Tariff {
             if (!hasNext()) throw new NoSuchElementException();
             return getServices()[index++];
         }
-    }*/
+    }
     // Lb 7. Методы интерфейса Collection
    /* @Override
     public boolean addAll(Collection<? extends Service> c) {
