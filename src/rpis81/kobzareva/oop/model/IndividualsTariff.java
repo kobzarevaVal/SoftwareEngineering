@@ -26,7 +26,7 @@ public class IndividualsTariff implements Tariff {
     }
 
     private boolean checkIndex(int index){
-        return index < 0 || index >= getSize();
+        return index < 0 || index >= size();
     }
 
     // принимающий массив услуг. В этом конструкторе происходит копирование элементов в
@@ -144,9 +144,9 @@ public class IndividualsTariff implements Tariff {
 
 
     // число услуг
-    public int getSize() {
+   /* public int getSize() {
         return size;
-    }
+    }*/
 
     //10) возвращающий массив услуг -norm
     /*Я знаю, что так нельзя скорее всего, но я не знаю как при помощи arraycopy скопирвать массив не на интервале
@@ -157,7 +157,7 @@ public class IndividualsTariff implements Tariff {
 
     // это плохой нерабочий метод, я просто оставлю это здесь
     public  Service[] GetServices(){
-        Service[] result = new Service[getSize()];
+        Service[] result = new Service[size()];
         for (int i=0;i<services.length;i++){
             if(services[i]==null) {
                 System.arraycopy(services, i+ 1, result, 0, services.length - i - 1);
@@ -167,7 +167,7 @@ public class IndividualsTariff implements Tariff {
     }
     // это хороший рабочий метод, он используется везде
     public  Service[] getServices(){
-        Service[] result = new Service[getSize()];
+        Service[] result = new Service[size()];
         int index =0;
         for (int i=0;services.length>i;i++){
             if (services[i]!=null) {
@@ -195,11 +195,11 @@ public class IndividualsTariff implements Tariff {
     }*/
 
     // Lb 6
-    public Service[] sortedServicesByCost() {
+   /* public Service[] sortedServicesByCost() {
         Service[] services = getServices();
         Arrays.sort(services,Service::compareTo);
         return services;
-    }
+    }*/
 
    // Lb 7
     // sortedServicesByCost стал дефолтным в интерфейсе Tariff
@@ -231,7 +231,7 @@ public class IndividualsTariff implements Tariff {
         return false;
     }
 
-    @Override
+   /* @Override
     public Service[] getServices(ServiceTypes type) {
         if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
         Service[] newServiceArray = new Service[getCountOfServices(type)];
@@ -244,10 +244,9 @@ public class IndividualsTariff implements Tariff {
             }
         }
         return (newServiceArray);
-    }
+    }*/
 
     // Lb 7.  возвращает коллекцию по интерфейсной ссылке Collection<Service>
-    /*
         @Override
     public Collection<Service> getService(ServiceTypes type) {
         Objects.requireNonNull(type,"Значение type не должно быть Null");
@@ -259,7 +258,7 @@ public class IndividualsTariff implements Tariff {
         }
         return  serviceLinkedList;
     }
-     */
+
 
     private int getCountOfServices(ServiceTypes type){
         if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
@@ -290,9 +289,9 @@ public class IndividualsTariff implements Tariff {
 
     public boolean removeService(Service service) {
         if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
-        int size = getSize();
+        int size = size();
         remove(firstIndexOf(service));
-        return size!=getSize();
+        return size!=size();
     }
 
     public int firstIndexOf(Service service){
@@ -327,7 +326,7 @@ public class IndividualsTariff implements Tariff {
     // Lb 6
      @Override
         public int hashCode() {
-            AtomicInteger atomicInteger = new AtomicInteger(31 *getSize());
+            AtomicInteger atomicInteger = new AtomicInteger(31 *size());
             iterator().forEachRemaining(service -> atomicInteger.updateAndGet(value -> value ^ service.hashCode()));
             return atomicInteger.get();
         }
@@ -360,7 +359,7 @@ public class IndividualsTariff implements Tariff {
         int index;
         @Override
         public boolean hasNext() {
-            return index<getSize();
+            return index<size();
         }
 
         @Override
@@ -370,7 +369,7 @@ public class IndividualsTariff implements Tariff {
         }
     }
     // Lb 7. Методы интерфейса Collection
-   /* @Override
+    @Override
     public boolean addAll(Collection<? extends Service> c) {
         c.forEach(this::add);
         return size() >=c.size();
@@ -437,5 +436,5 @@ public class IndividualsTariff implements Tariff {
         Service[] services = (Service[]) a;
         Arrays.sort(services,Comparator.comparing(Service::getCost));
         return (T[]) services;
-    }*/
+    }
 }

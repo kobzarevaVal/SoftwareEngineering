@@ -167,7 +167,7 @@ public class AccountManager  implements Iterable<Account> {
         return individualsTariff;
     }
 
-    public Account[] getAccounts(ServiceTypes serviceType){
+    /*public Account[] getAccounts(ServiceTypes serviceType){
         if(Objects.isNull(serviceType)) throw new NullPointerException("Значение serviceType не должно быть null");
 
         Account[] getAccountsArray = new Account[size];
@@ -183,9 +183,9 @@ public class AccountManager  implements Iterable<Account> {
         Account[] shortArray = new Account[index];
         System.arraycopy(getAccountsArray, 0, shortArray, 0, index);
         return shortArray;
-    }
+    }*/
     // Lb 7. возвращающий массив счетов, у которых подключена услуга заданного типа по интерфейсной ссылке Set<Account>
-   /* public Set<Account> getAccounts(ServiceTypes serviceTypes){
+    public Set<Account> getAccounts(ServiceTypes serviceTypes){
         HashSet<Account> accountHashSet = new HashSet<>();
         Objects.requireNonNull(serviceTypes,"Значение serviceTypes не может быть Null");
         for(Account account :getAccounts()){
@@ -197,10 +197,10 @@ public class AccountManager  implements Iterable<Account> {
             }
         }
         return accountHashSet;
-    }*/
+    }
 
     // Lb 7. возвращающий массив счетов, у которых подключена услуга с заданным названием по интерфейсной ссылке Set<Account>
-    /*public Set<Account> getAccounts(String serviceName){
+    public Set<Account> getAccounts(String serviceName){
         HashSet<Account> accountHashSet = new HashSet<>();
         for(Account account : getAccounts()){
             for(Service service : (Service[]) account.getTariff().toArray()){
@@ -210,9 +210,9 @@ public class AccountManager  implements Iterable<Account> {
             }
         }
         return accountHashSet;
-    }*/
+    }
 
-    public Account[] getIndividualAccounts(){
+    /*public Account[] getIndividualAccounts(){
         Account[] getAccountsArray = new Account[getCountOfAccount()];
         int index = 0;
         for (Account account : accounts){
@@ -224,9 +224,9 @@ public class AccountManager  implements Iterable<Account> {
         Account[] shortArray = new Account[index];
         System.arraycopy(getAccountsArray, 0, shortArray, 0, index);
         return shortArray;
-    }
+    }*/
 
-    /* Lb 7. возвращающий массив счетов физ. лиц по интерфейсной ссылке List<Account>
+    // Lb 7. возвращающий массив счетов физ. лиц по интерфейсной ссылке List<Account>
     public List<Account> getIndividualAccounts(){
         ArrayList<Account> accountArrayList = new ArrayList<>() ;
         for(Account account : getAccounts()){
@@ -236,9 +236,9 @@ public class AccountManager  implements Iterable<Account> {
         }
         return accountArrayList;
     }
-     */
 
-    public Account[] getEntityAccounts(){
+
+   /* public Account[] getEntityAccounts(){
         Account[] getAccountsArray = new Account[getCountOfAccount()];
         int index = 0;
         for (Account account : accounts){
@@ -250,9 +250,9 @@ public class AccountManager  implements Iterable<Account> {
         Account[] shortArray = new Account[index];
         System.arraycopy(getAccountsArray, 0, shortArray, 0, index);
         return shortArray;
-    }
+    }*/
 
-    /* Lb 7. возвращающий массив счетов юр. лиц по интерфейсной ссылке List<Account>
+    // Lb 7. возвращающий массив счетов юр. лиц по интерфейсной ссылке List<Account>
     public List<Account> getEntityAccounts(){
         LinkedList<Account> accountLinkedList = new LinkedList<>();
         for(Account account:getAccounts()){
@@ -264,7 +264,7 @@ public class AccountManager  implements Iterable<Account> {
         }
         return accountLinkedList;
     }
-     */
+
 
    /* @Override
     public String toString(){

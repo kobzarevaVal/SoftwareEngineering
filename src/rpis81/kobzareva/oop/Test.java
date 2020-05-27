@@ -88,6 +88,6 @@ public class Test {
         entityTariff.add(service0);
         entityTariff.add(service0);
         entityTariff.add(service0);
-        System.out.println("размер "+entityTariff.getSize());
+        System.out.println("размер "+entityTariff.size());
     }
 }

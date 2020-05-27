@@ -103,10 +103,10 @@ public class EntityTariff implements Tariff, Cloneable {
         return new Service();
     }
 
-    @Override
+   /* @Override
     public int getSize() {
         return size;
-    }
+    }*/
 
     @Override
     public Service[] getServices() {
@@ -117,7 +117,7 @@ public class EntityTariff implements Tariff, Cloneable {
         return filterServices(services);
     }
     private Service[] filterServices(Service[] services){
-        Service[] result = new Service[getSize()];
+        Service[] result = new Service[size()];
         int index =0;
         for (int i=0;services.length>i;i++){
             if (services[i]!=null) {
@@ -144,12 +144,12 @@ public class EntityTariff implements Tariff, Cloneable {
         return (sortingServices);
     }*/
     // Lb 6
-    @Override
+   /* @Override
     public Service[] sortedServicesByCost() {
         Service[] services = getServices();
         Arrays.sort(services,Service::compareTo);
         return services;
-    }
+    }*/
 
     // Lb 7
     // sortedServicesByCost стал дефолтным в интерфейсе Tariff
@@ -181,7 +181,7 @@ public class EntityTariff implements Tariff, Cloneable {
     }
 
 
-    @Override
+   /* @Override
     public Service[] getServices(ServiceTypes type) {
         if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
         Service[] newServiceArray = new Service[getCountOfTypeServices(type)];
@@ -194,12 +194,12 @@ public class EntityTariff implements Tariff, Cloneable {
             }
         }
         return (newServiceArray);
-    }
+    }*/
 
     // Lb 7.  возвращает коллекцию по интерфейсной ссылке Collection<Service>
-    /*
+
         @Override
-    public Collection<Service> getService(ServiceTypes type) {
+        public Collection<Service> getService(ServiceTypes type) {
         Objects.requireNonNull(type,"Значение type не должно быть Null");
         LinkedList<Service> serviceLinkedList = new LinkedList<>();
         for(Service service:(Service[]) toArray()){
@@ -209,7 +209,7 @@ public class EntityTariff implements Tariff, Cloneable {
         }
         return  serviceLinkedList;
     }
-     */
+
 
     private int getCountOfTypeServices(ServiceTypes type){
         if(Objects.isNull(type)) throw new NullPointerException("Значение type не должно быть null");
@@ -225,9 +225,9 @@ public class EntityTariff implements Tariff, Cloneable {
 
     public boolean removeService(Service service){
         if(Objects.isNull(service)) throw new NullPointerException("Значение service не должно быть null");
-        int size = getSize();
+        int size = size();
         remove(firstIndexOf(service));
-        return size!=getSize();
+        return size!=size();
     }
 
     public int firstIndexOf(Service service){
@@ -336,7 +336,7 @@ public class EntityTariff implements Tariff, Cloneable {
 
      @Override
         public int hashCode() {
-            AtomicInteger atomicInteger = new AtomicInteger(31 *getSize());
+            AtomicInteger atomicInteger = new AtomicInteger(31 *size());
             iterator().forEachRemaining(service -> atomicInteger.updateAndGet(value -> value ^ service.hashCode()));
             return atomicInteger.get();
         }
@@ -368,7 +368,7 @@ public class EntityTariff implements Tariff, Cloneable {
         int index;
         @Override
         public boolean hasNext() {
-            return index<getSize();
+            return index<size();
         }
 
         @Override
@@ -378,7 +378,7 @@ public class EntityTariff implements Tariff, Cloneable {
         }
     }
    // Lb 7. Методы интерфейса Collection
-  /*  @Override
+    @Override
     public boolean addAll(Collection<? extends Service> c) {
         c.forEach(this::add);
         return size() >=c.size();
@@ -445,5 +445,5 @@ public class EntityTariff implements Tariff, Cloneable {
         Service[] services = (Service[]) a;
         Arrays.sort(services,Comparator.comparing(Service::getCost));
         return (T[]) services;
-    }*/
+    }
 }

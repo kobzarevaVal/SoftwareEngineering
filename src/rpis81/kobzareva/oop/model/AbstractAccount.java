@@ -51,8 +51,8 @@ public abstract class AbstractAccount implements Account{
     @Override
     public int hashCode(){
         Service[] services = tariff.getServices();
-        int sizeOfArray= services.length;
-        return Double.hashCode(number) * getTariff().getSize() * Objects.hashCode(registrationDate);
+     //   int sizeOfArray= services.length;
+        return Double.hashCode(number) * getTariff().size() * Objects.hashCode(registrationDate);
      //  return Objects.hash(number,getTariff().getSize(),registrationDate);
     }
 
@@ -66,7 +66,7 @@ public abstract class AbstractAccount implements Account{
         }
         AbstractAccount other = (AbstractAccount) obj;
         return Objects.equals(number,other.number) &&
-                Objects.equals(getTariff().getSize(), other.getTariff().getSize()) &&
+                Objects.equals(getTariff().size(), other.getTariff().size()) &&
                 Objects.equals(registrationDate, other.registrationDate);
     }
 }
